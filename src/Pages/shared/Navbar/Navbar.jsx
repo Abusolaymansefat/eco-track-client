@@ -1,22 +1,23 @@
-// import { useContext } from "react";
-import { NavLink } from "react-router";
-import { FaMoon, FaSun, FaHome, FaUserPlus, FaSignInAlt } from "react-icons/fa";
+import { useContext } from "react";
+import { NavLink } from "react-router"; 
+import { FaMoon, FaSun, FaHome, FaUserPlus, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
 import home12Logo from "../../../assets/logo/loader.png";
-// import { AuthContext } from "../../../Context/AuthContext/AuthContext";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../../Context/AuthContext/AuthContext";
 
 const Navbar = () => {
-  // const { user, logout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
 
-  // const handleLogOut = () => {
-  //   logout()
-  //     .then(() => {
-  //       toast.success("Logout successful");
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
+  const handleLogOut = () => {
+    logout()
+      .then(() => {
+        toast.success("Logout successful");
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Logout failed");
+      });
+  };
 
   const links = (
     <>
@@ -25,12 +26,12 @@ const Navbar = () => {
           <FaHome /> Home
         </NavLink>
       </li>
-      {/* Add your conditional links based on user here */}
+      {/* Add more links if needed */}
     </>
   );
 
   return (
-    <div className="navbar bg-gray-900 shadow-sm">
+    <div className="navbar bg-gray-900 shadow-sm text-white">
       <div className="navbar-start">
         {/* Mobile Dropdown */}
         <div className="dropdown">
@@ -90,26 +91,38 @@ const Navbar = () => {
         </label>
 
         {/* Auth Buttons */}
-        {/* {user ? (
+        {user ? (
           <>
-            <span className="font-semibold">{user.email}</span>
-            <button onClick={handleLogOut} className="btn btn-sm">
-              Logout
-            </button>
+            <div className="flex items-center gap-2">
+              {/* Optional: show profile picture if available */}
+              {user.photoURL && (
+                <img
+                  src={user.photoURL}
+                  alt="profile"
+                  className="w-8 h-8 rounded-full border"
+                />
+              )}
+              <span className="hidden md:inline font-medium">
+                {user.displayName || user.email}
+              </span>
+              <button onClick={handleLogOut} className="btn btn-sm flex items-center gap-1">
+                <FaSignOutAlt /> Logout
+              </button>
+            </div>
           </>
-        ) : ( */}
-        <>
-          <NavLink
-            className="btn btn-sm flex items-center gap-1"
-            to="/register"
-          >
-            <FaUserPlus /> Register
-          </NavLink>
-          <NavLink className="btn btn-sm flex items-center gap-1" to="/login">
-            <FaSignInAlt /> Login
-          </NavLink>
-        </>
-        {/* )} */}
+        ) : (
+          <>
+            <NavLink
+              className="btn btn-sm flex items-center gap-1"
+              to="/register"
+            >
+              <FaUserPlus /> Register
+            </NavLink>
+            <NavLink className="btn btn-sm flex items-center gap-1" to="/login">
+              <FaSignInAlt /> Login
+            </NavLink>
+          </>
+        )}
       </div>
     </div>
   );

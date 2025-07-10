@@ -1,9 +1,9 @@
-import { useForm } from "react-hook-form";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthProvider";
+import { AuthContext } from "../../../Context/AuthContext/AuthContext";
+import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router";
-import SocialLogin from "../components/SocialLogin";
 import { toast } from "react-toastify";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
   const { login } = useContext(AuthContext);

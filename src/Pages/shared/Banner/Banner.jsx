@@ -65,7 +65,7 @@ const Banner = () => {
               animate={{
                 opacity: 1,
                 y: 0,
-                color: ["#3515c8 ", "#60a5fa", "#264b51 ", "#fbbf24", "#18117a "],
+                color: ["#3515c8", "#60a5fa", "#264b51", "#fbbf24", "#18117a"],
               }}
               transition={{
                 duration: 4,
@@ -96,7 +96,7 @@ const Banner = () => {
               animate={{
                 opacity: 1,
                 y: 0,
-                color: ["#f87171", "#9dbaab", "#1d90ca ", "#0ac3e0 ", "#0e4342"],
+                color: ["#f87171", "#9dbaab", "#1d90ca", "#0ac3e0", "#0e4342"],
               }}
               transition={{
                 duration: 4,

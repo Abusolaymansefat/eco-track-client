@@ -1,23 +1,34 @@
-import { useForm } from "react-hook-form";
 import { useContext } from "react";
-import { AuthContext } from "../context/AuthProvider";
-import { Link, useNavigate } from "react-router";
-import SocialLogin from "../components/SocialLogin";
+import { AuthContext } from "../../../Context/AuthContext/AuthContext";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router"; 
 import { toast } from "react-toastify";
+import SocialLogin from "../SocialLogin/SocialLogin";
+import { imageUpload } from "../../../api/utils";
+
 
 const Register = () => {
   const { register: createUser, updateProfile } = useContext(AuthContext);
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, formState: { errors }, reset } = useForm();
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
+      // Step 1: Upload image and get image URL
+      const imageFile = data.photo[0];
+      const imageURL = await imageUpload(imageFile);
+
+      // Step 2: Create user
       const res = await createUser(data.email, data.password);
+
+      // Step 3: Update user profile
       await updateProfile(res.user, {
         displayName: data.name,
-        photoURL: data.photo
+        photoURL: imageURL,
       });
+
       toast.success("Registration successful");
+      reset();
       navigate("/");
     } catch (err) {
       toast.error("Registration failed: " + err.message);
@@ -37,7 +48,13 @@ const Register = () => {
         <input {...register("password", { required: true, minLength: 6 })} type="password" placeholder="Password" className="w-full p-2 border" />
         {errors.password && <p className="text-red-500">Password must be 6 characters</p>}
 
-        <input {...register("photo")} placeholder="Photo URL" className="w-full p-2 border" />
+        <input
+          {...register("photo", { required: true })}
+          type="file"
+          accept="image/*"
+          className="w-full p-2 border"
+        />
+        {errors.photo && <p className="text-red-500">Photo is required</p>}
 
         <button className="bg-green-500 text-white py-2 px-4 rounded w-full">Register</button>
       </form>

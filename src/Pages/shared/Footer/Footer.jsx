@@ -55,9 +55,9 @@ const Footer = () => {
             <FaEnvelope />
             <a
               className="hover:text-blue-400"
-              href="mailto:sefat016925@gmail.com"
+              href="mailto:sefat01625@gmail.com"
             >
-              sefat016925@gmail.com
+              sefat01625@gmail.com
             </a>
           </p>
           <p className="flex items-center gap-2">
