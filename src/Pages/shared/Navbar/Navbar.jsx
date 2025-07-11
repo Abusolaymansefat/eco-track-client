@@ -26,6 +26,11 @@ const Navbar = () => {
           <FaHome /> Home
         </NavLink>
       </li>
+      <li>
+        <NavLink to="/dashboardLayout" className="flex items-center gap-2">
+          <FaHome /> Dashboard Layout
+        </NavLink>
+      </li>
       {/* Add more links if needed */}
     </>
   );
@@ -90,18 +95,12 @@ const Navbar = () => {
           <FaMoon className="swap-off fill-current w-5 h-5" />
         </label>
 
-        {/* Auth Buttons */}
+
         {user ? (
           <>
             <div className="flex items-center gap-2">
-              {/* Optional: show profile picture if available */}
-              {user.photoURL && (
-                <img
-                  src={user.photoURL}
-                  alt="profile"
-                  className="w-8 h-8 rounded-full border"
-                />
-              )}
+              
+              
               <span className="hidden md:inline font-medium">
                 {user.displayName || user.email}
               </span>
