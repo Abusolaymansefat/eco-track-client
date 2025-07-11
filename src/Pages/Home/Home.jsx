@@ -5,6 +5,7 @@ import PartnersSection from '../shared/Sections/PartnersSection';
 import Testimonials from '../shared/Sections/Testimonials';
 import WhyChooseUs from './WhyChooseUs';
 import TrendingProducts from '../TrendingProducts.jsxTrendingProducts/TrendingProducts';
+import FeaturedProducts from '../shared/FeaturedProducts/FeaturedProducts';
 
 
 const Home = () => {
