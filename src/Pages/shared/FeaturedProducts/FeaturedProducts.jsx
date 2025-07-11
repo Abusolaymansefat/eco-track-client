@@ -5,9 +5,11 @@ import { useState } from "react";
 import useAxios from "../../../hooks/useAxios";
 import useAuth from "../../../hooks/UseAuth";
 import { useNavigate, useParams } from "react-router";
+// import { useNavigate, useParams } from "react-router";
 
 const ProductDetails = () => {
   const { id } = useParams();
+//   console.log("Product ID from URL:", id);
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();

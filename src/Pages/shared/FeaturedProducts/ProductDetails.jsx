@@ -8,6 +8,7 @@ import useAuth from "../../../hooks/UseAuth";
 
 const ProductDetails = () => {
   const { id } = useParams();
+  console.log("Product", id);
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();
