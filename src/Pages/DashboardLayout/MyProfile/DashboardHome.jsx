@@ -1,11 +1,15 @@
 import React from "react";
 import { FaPlus, FaUser } from "react-icons/fa";
 import { Link } from "react-router";
+import Navbar from "../../shared/Navbar/Navbar";
 
 const DashboardHome = () => {
   return (
-    <div className="flex min-h-screen">
+    <div>
+        <Navbar></Navbar>
+        <div className="flex min-h-screen">
       {/* Sidebar */}
+      
       <aside className="w-64 bg-gray-800 text-white p-5">
         <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
         <nav className="flex flex-col space-y-4">
@@ -26,6 +30,7 @@ const DashboardHome = () => {
           </Link>
         </nav>
       </aside>
+    </div>
     </div>
   );
 };
