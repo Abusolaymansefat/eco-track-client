@@ -20,11 +20,15 @@ const DashboardLayout = () => {
             <Link to="/dashboardLayout/add-product" className="hover:underline">
               Add Product
             </Link>
-            <Link to="/dashboardLayout/paymentHistory" className="hover:underline">
-             <FaHistory /> Payment History
+            <Link to="/dashboardLayout/payment" className="hover:underline">
+              Payment
             </Link>
-            
-            
+            <Link
+              to="/dashboardLayout/paymentHistory"
+              className="hover:underline"
+            >
+              <FaHistory /> Payment History
+            </Link>
           </nav>
         </aside>
 

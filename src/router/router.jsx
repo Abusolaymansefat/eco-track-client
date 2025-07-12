@@ -59,7 +59,7 @@ export const router = createBrowserRouter([
           { path: "profile", element: <MyProfile /> },
           { path: "add-product", element: <AddProduct /> },
           {
-            path: "/payment",
+            path: "payment",
             element: <Payment />,
           },
           {
