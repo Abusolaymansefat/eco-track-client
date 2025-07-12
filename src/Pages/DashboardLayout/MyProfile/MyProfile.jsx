@@ -17,7 +17,7 @@ const MyProfile = () => {
 
   // সাবস্ক্রিপশন বাটনে ক্লিক করলে পেমেন্ট পেজে পাঠাবেন
   const handleSubscribe = () => {
-    navigate("/payment"); // বা এখানে মডাল খুলতে পারেন
+    navigate("/payment"); 
   };
 
   return (
