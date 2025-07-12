@@ -1,5 +1,6 @@
 import { Link, Outlet } from "react-router";
 import Navbar from "../Pages/shared/Navbar/Navbar";
+import { FaHistory } from "react-icons/fa";
 
 const DashboardLayout = () => {
   return (
@@ -19,6 +20,11 @@ const DashboardLayout = () => {
             <Link to="/dashboardLayout/add-product" className="hover:underline">
               Add Product
             </Link>
+            <Link to="/dashboardLayout/paymentHistory" className="hover:underline">
+             <FaHistory /> Payment History
+            </Link>
+            
+            
           </nav>
         </aside>
 

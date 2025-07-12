@@ -12,6 +12,8 @@ import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardHome from "../Pages/DashboardLayout/MyProfile/DashboardHome";
 import ProductDetails from "../Pages/shared/FeaturedProducts/ProductDetails";
 import AllProducts from "../Pages/shared/FeaturedProducts/AllProducts";
+import Payment from "../Pages/Payment/Payment";
+import PaymentHistory from "../Pages/Payment/PaymentHistory";
 
 export const router = createBrowserRouter([
   {
@@ -48,14 +50,22 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboardLayout",
-    element: <PrivateRoute />,  // PrivateRoute will protect nested routes
+    element: <PrivateRoute />,
     children: [
       {
-        element: <DashboardLayout />,  // Layout for all dashboard routes
+        element: <DashboardLayout />,
         children: [
           { index: true, element: <DashboardHome /> },
           { path: "profile", element: <MyProfile /> },
           { path: "add-product", element: <AddProduct /> },
+          {
+            path: "/payment",
+            element: <Payment />,
+          },
+          {
+            path: "paymentHistory",
+            element: PaymentHistory,
+          },
         ],
       },
     ],
