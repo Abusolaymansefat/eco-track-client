@@ -48,27 +48,18 @@ export const router = createBrowserRouter([
   },
   {
     path: "/dashboardLayout",
-    element: (
-      <PrivateRoute>
-        <DashboardLayout />
-      </PrivateRoute>
-    ),
+    element: <PrivateRoute />,  // PrivateRoute will protect nested routes
     children: [
       {
-        index: true,
-        element: <DashboardHome />,
-      },
-      {
-        path: "profile",
-        element: <MyProfile />,
-      },
-      {
-        path: "add-product",
-        element: <AddProduct />,
+        element: <DashboardLayout />,  // Layout for all dashboard routes
+        children: [
+          { index: true, element: <DashboardHome /> },
+          { path: "profile", element: <MyProfile /> },
+          { path: "add-product", element: <AddProduct /> },
+        ],
       },
     ],
   },
-
   {
     path: "/*",
     element: <ErrorPage></ErrorPage>,

@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/UseAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
 
@@ -11,15 +11,26 @@ const AllProducts = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+
   const [page, setPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
   const limit = 6;
 
+  // Reset page when searchTerm changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm]);
+
   const { data = { products: [], total: 0 }, isLoading } = useQuery({
-    queryKey: ["allProducts", page],
+    queryKey: ["allProducts", page, searchTerm],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/products?page=${page}&limit=${limit}`);
-      return res.data; // Must return { products, total }
+      // Call API with searchTerm as query param
+      const res = await axiosSecure.get(
+        `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`
+      );
+      return res.data; // Expected { products, total }
     },
+    keepPreviousData: true,
   });
 
   const products = data.products || [];
@@ -33,7 +44,7 @@ const AllProducts = () => {
     },
     onSuccess: () => {
       toast.success("Upvoted!");
-      queryClient.invalidateQueries(["allProducts", page]);
+      queryClient.invalidateQueries(["allProducts", page, searchTerm]);
     },
     onError: () => toast.error("Already voted or failed!"),
   });
@@ -49,7 +60,18 @@ const AllProducts = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-bold text-center mb-10">🛍️ All Products</h2>
+      <h2 className="text-3xl font-bold text-center mb-6">🛍️ All Products</h2>
+
+      {/* Search box */}
+      <div className="max-w-md mx-auto mb-8">
+        <input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="input input-bordered w-full"
+        />
+      </div>
 
       {isLoading ? (
         <p className="text-center">Loading...</p>
@@ -62,7 +84,10 @@ const AllProducts = () => {
             const isOwner = user?.email === product.ownerEmail;
 
             return (
-              <div key={product._id} className="border p-4 rounded-lg shadow-md hover:shadow-lg transition">
+              <div
+                key={product._id}
+                className="border p-4 rounded-lg shadow-md hover:shadow-lg transition"
+              >
                 <img
                   src={product.image}
                   alt={product.name}
@@ -76,7 +101,7 @@ const AllProducts = () => {
 
                 <div className="flex flex-wrap gap-2 my-2">
                   {product.tags?.map((tag, idx) => (
-                    <span key={idx} className=" px-2 py-1 text-xs rounded-full">
+                    <span key={idx} className="px-2 py-1 text-xs rounded-full">
                       {tag}
                     </span>
                   ))}
@@ -114,7 +139,9 @@ const AllProducts = () => {
         >
           Prev
         </button>
-        <span className="mt-1 font-medium">Page {page} of {totalPages}</span>
+        <span className="mt-1 font-medium">
+          Page {page} of {totalPages}
+        </span>
         <button
           onClick={() => setPage((prev) => prev + 1)}
           disabled={page >= totalPages}

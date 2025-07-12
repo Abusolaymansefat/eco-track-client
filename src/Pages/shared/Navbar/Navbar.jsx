@@ -83,7 +83,7 @@ const Navbar = () => {
           <img
             src={home12Logo}
             alt="logo"
-            className="h-12 w-auto object-contain bg-white p-1 rounded"
+            className="h-12 w-auto object-contain  p-1 rounded"
           />
         </NavLink>
       </div>
