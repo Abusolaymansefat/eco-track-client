@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
 import { Link, useNavigate } from "react-router";
 import { FaFire, FaThumbsUp } from "react-icons/fa";
-
 import { toast } from "react-toastify";
 import useAuth from "../../hooks/UseAuth";
 
@@ -17,7 +16,7 @@ const TrendingProducts = () => {
       .then(res => {
         const trending = res.data
           .sort((a, b) => b.upvotes - a.upvotes)
-          .slice(0, 6); // Top 6 by votes
+          .slice(0, 6);
         setProducts(trending);
       })
       .catch(err => console.error(err));
@@ -80,7 +79,7 @@ const TrendingProducts = () => {
                   key={idx}
                   className="inline-block bg-gray-200 text-xs px-2 py-1 rounded-full mr-1"
                 >
-                  #{tag}
+                  {tag}
                 </span>
               ))}
             </p>

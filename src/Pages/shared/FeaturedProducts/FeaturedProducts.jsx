@@ -1,171 +1,103 @@
-// import { useParams, useNavigate } from "react-router";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-toastify";
-import { useState } from "react";
-import useAxios from "../../../hooks/useAxios";
+import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/UseAuth";
-import { useNavigate, useParams } from "react-router";
-// import { useNavigate, useParams } from "react-router";
+import useAxios from "../../../hooks/useAxios";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
+import { FaThumbsUp } from "react-icons/fa";
 
-const ProductDetails = () => {
-  const { id } = useParams();
-//   console.log("Product ID from URL:", id);
+const FeaturedProducts = () => {
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const [reviewText, setReviewText] = useState("");
-  const [rating, setRating] = useState(0);
-
-  // ✅ Fetch Product
-  const { data: product, isLoading } = useQuery({
-    queryKey: ["product", id],
+  const { data: featuredProducts = [], isLoading } = useQuery({
+    queryKey: ["featuredProducts"],
     queryFn: async () => {
-      const res = await axiosSecure.get(`/products/${id}`);
+      const res = await axiosSecure.get("/products/featured");
       return res.data;
-    }
+    },
   });
 
-  // ✅ Upvote Mutation
   const upvoteMutation = useMutation({
-    mutationFn: () =>
-      axiosSecure.patch(`/products/upvote/${id}`, {
+    mutationFn: async (id) => {
+      return await axiosSecure.patch(`/products/upvote/${id}`, {
         userEmail: user.email,
-      }),
-    onSuccess: () => {
-      toast.success("Voted successfully!");
-      queryClient.invalidateQueries(["product", id]);
-    },
-    onError: () => {
-      toast.error("Already voted or failed!");
-    },
-  });
-
-  // ✅ Post Review Mutation
-  const reviewMutation = useMutation({
-    mutationFn: async () => {
-      const review = {
-        productId: id,
-        reviewerName: user.displayName,
-        reviewerImage: user.photoURL,
-        description: reviewText,
-        rating,
-        timestamp: new Date(),
-      };
-      return await axiosSecure.post("/reviews", review);
+      });
     },
     onSuccess: () => {
-      toast.success("Review submitted!");
-      setReviewText("");
-      setRating(0);
+      toast.success("Upvoted!");
+      queryClient.invalidateQueries(["featuredProducts"]);
     },
-    onError: () => toast.error("Review failed!"),
+    onError: () => toast.error("Already voted or failed!"),
   });
 
-  if (isLoading) return <p className="text-center">Loading...</p>;
-  if (!product) return <p className="text-center">Product not found</p>;
-
-  const handleUpvote = () => {
+  const handleUpvote = (product) => {
     if (!user) return navigate("/login");
-    if (product.voters.includes(user.email)) {
+    if (product.voters?.includes(user.email)) {
       toast.error("You already voted!");
       return;
     }
-    upvoteMutation.mutate();
+    upvoteMutation.mutate(product._id);
   };
 
-  const handleReviewSubmit = (e) => {
-    e.preventDefault();
-    if (!reviewText || !rating) return toast.error("Fill all fields!");
-    reviewMutation.mutate();
-  };
+  if (isLoading) return <p className="text-center py-10">Loading...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <img
-        src={product.image}
-        alt={product.name}
-        className="w-full h-64 object-cover rounded mb-4"
-      />
-      <h2 className="text-3xl font-bold mb-2">{product.name}</h2>
-      <p className="mb-4 text-gray-700">{product.description}</p>
-      <div className="flex gap-2 flex-wrap mb-4">
-        {product.tags.map((tag, i) => (
-          <span
-            key={i}
-            className="bg-gray-200 text-sm px-3 py-1 rounded-full"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-      <p className="mb-2">Upvotes: {product.upvotes}</p>
+    <section className="my-10 px-4 max-w-7xl mx-auto bg-gradient-to-br py-10 rounded-lg shadow">
+      <h2 className="text-3xl font-bold text-center mb-10">🔥 Featured Products</h2>
 
-      <div className="flex gap-2 mb-6">
-        <button
-          onClick={handleUpvote}
-          className="btn btn-sm btn-primary"
-          disabled={user?.email === product.ownerEmail}
-        >
-          Upvote
-        </button>
-        <button
-          className="btn btn-sm btn-error"
-          onClick={() => toast.info("Report submitted!")}
-        >
-          Report
-        </button>
-        {product.externalLink && (
-          <a
-            href={product.externalLink}
-            className="btn btn-sm btn-secondary"
-            target="_blank"
-            rel="noreferrer"
-          >
-            Visit Website
-          </a>
-        )}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {featuredProducts.slice(0, 6).map((product) => {
+          const alreadyVoted = product.voters?.includes(user?.email);
+          const isOwner = user?.email === product.ownerEmail;
+
+          return (
+            <div key={product._id} className="border p-4 rounded-lg shadow-md">
+              <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded" />
+
+              <Link to={`/products/${product._id}`}>
+                <h3 className="text-xl font-semibold text-blue-600 hover:underline mt-2">
+                  {product.name}
+                </h3>
+              </Link>
+
+              <div className="flex flex-wrap gap-2 my-2">
+                {product.tags?.map((tag, idx) => (
+                  <span key={idx} className=" text-xs px-2 py-1 rounded-full">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <button
+                onClick={() => handleUpvote(product)}
+                disabled={isOwner || alreadyVoted}
+                className={`btn btn-sm mt-3 flex items-center gap-2 ${
+                  isOwner || alreadyVoted ? "btn-disabled" : "btn-primary"
+                }`}
+              >
+                <FaThumbsUp /> {product.upvotes}
+              </button>
+
+              {(isOwner || alreadyVoted) && (
+                <p className="text-xs text-red-500 mt-1">
+                  {isOwner ? "You can't vote on your own product" : "You already voted"}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
 
-      {/* ✅ Review Section */}
-      <div className="bg-white p-4 rounded shadow mb-10">
-        <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
-        <form onSubmit={handleReviewSubmit} className="space-y-4">
-          <input
-            type="text"
-            value={user.displayName}
-            readOnly
-            className="input input-bordered w-full"
-          />
-          <input
-            type="text"
-            value={user.photoURL}
-            readOnly
-            className="input input-bordered w-full"
-          />
-          <textarea
-            value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}
-            placeholder="Write your review"
-            className="textarea textarea-bordered w-full"
-          />
-          <input
-            type="number"
-            min={1}
-            max={5}
-            value={rating}
-            onChange={(e) => setRating(e.target.value)}
-            className="input input-bordered w-full"
-            placeholder="Rating (1-5)"
-          />
-          <button type="submit" className="btn btn-primary">
-            Submit Review
-          </button>
-        </form>
+      {/* 👉 Show All Products Button */}
+      <div className="text-center mt-10">
+        <Link to="/products">
+          <button className="btn btn-outline btn-primary">Show All Products</button>
+        </Link>
       </div>
-    </div>
+    </section>
   );
 };
 
-export default ProductDetails;
+export default FeaturedProducts;

@@ -1,7 +1,16 @@
 import { useContext } from "react";
-import { NavLink } from "react-router"; 
-import { FaMoon, FaSun, FaHome, FaUserPlus, FaSignInAlt, FaSignOutAlt } from "react-icons/fa";
-import home12Logo from "../../../assets/logo/loader.png";
+import { NavLink } from "react-router";
+import {
+  FaMoon,
+  FaSun,
+  FaHome,
+  FaUserPlus,
+  FaSignInAlt,
+  FaSignOutAlt,
+  FaBoxOpen,
+  FaTachometerAlt,
+} from "react-icons/fa";
+import home12Logo from "../../../assets/logo-1.png";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../Context/AuthContext/AuthContext";
 
@@ -27,8 +36,13 @@ const Navbar = () => {
         </NavLink>
       </li>
       <li>
+        <NavLink to="/products" className="flex items-center gap-2">
+          <FaBoxOpen /> Products
+        </NavLink>
+      </li>
+      <li>
         <NavLink to="/dashboardLayout" className="flex items-center gap-2">
-          <FaHome /> Dashboard Layout
+          <FaTachometerAlt /> Dashboard
         </NavLink>
       </li>
       {/* Add more links if needed */}
@@ -95,16 +109,16 @@ const Navbar = () => {
           <FaMoon className="swap-off fill-current w-5 h-5" />
         </label>
 
-
         {user ? (
           <>
             <div className="flex items-center gap-2">
-              
-              
               <span className="hidden md:inline font-medium">
                 {user.displayName || user.email}
               </span>
-              <button onClick={handleLogOut} className="btn btn-sm flex items-center gap-1">
+              <button
+                onClick={handleLogOut}
+                className="btn btn-sm flex items-center gap-1"
+              >
                 <FaSignOutAlt /> Logout
               </button>
             </div>

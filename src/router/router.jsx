@@ -11,6 +11,7 @@ import AddProduct from "../Pages/AddProduct/AddProduct";
 import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardHome from "../Pages/DashboardLayout/MyProfile/DashboardHome";
 import ProductDetails from "../Pages/shared/FeaturedProducts/ProductDetails";
+import AllProducts from "../Pages/shared/FeaturedProducts/AllProducts";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
       {
         path: "products/:id",
         element: <ProductDetails />,
+      },
+      {
+        path: "/products",
+        element: <AllProducts />,
       },
     ],
   },

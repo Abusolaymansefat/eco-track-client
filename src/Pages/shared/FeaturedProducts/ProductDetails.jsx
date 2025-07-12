@@ -8,7 +8,6 @@ import useAuth from "../../../hooks/UseAuth";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  console.log("Product", id);
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -93,7 +92,7 @@ const ProductDetails = () => {
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       {/* Product Info */}
-      <div className="bg-white p-6 shadow rounded">
+      <div className=" p-6 shadow rounded">
         <img
           src={product.image}
           alt={product.name}
@@ -104,7 +103,7 @@ const ProductDetails = () => {
         <div className="flex flex-wrap gap-2 mt-3">
           {product.tags.map((tag, i) => (
             <span key={i} className="badge badge-outline">
-              #{tag}
+              {tag}
             </span>
           ))}
         </div>
@@ -133,7 +132,7 @@ const ProductDetails = () => {
       </div>
 
       {/* Reviews */}
-      <div className="bg-white p-6 shadow rounded space-y-4">
+      <div className=" p-6 shadow rounded space-y-4">
         <h3 className="text-xl font-semibold">Reviews</h3>
         {reviews.length === 0 ? (
           <p>No reviews yet.</p>
@@ -160,7 +159,7 @@ const ProductDetails = () => {
 
       {/* Post Review Form */}
       {user && (
-        <div className="bg-white p-6 shadow rounded">
+        <div className=" p-6 shadow rounded">
           <h3 className="text-xl font-semibold mb-4">Write a Review</h3>
           <form onSubmit={handleSubmit(onSubmitReview)} className="space-y-4">
             <input
