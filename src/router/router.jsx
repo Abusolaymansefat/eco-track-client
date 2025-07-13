@@ -14,6 +14,9 @@ import ProductDetails from "../Pages/shared/FeaturedProducts/ProductDetails";
 import AllProducts from "../Pages/shared/FeaturedProducts/AllProducts";
 import Payment from "../Pages/Payment/Payment";
 import PaymentHistory from "../Pages/Payment/PaymentHistory";
+import ReportedProducts from "../Pages/ReportedProducts/ReportedProducts";
+import ProductReviewQueue from "../Pages/ProductReviewQueue/ProductReviewQueue";
+// import PaymentForm from "../Pages/Payment/PaymentForm";
 
 export const router = createBrowserRouter([
   {
@@ -62,10 +65,22 @@ export const router = createBrowserRouter([
             path: "payment",
             element: <Payment />,
           },
+          // {
+          //   path: 'paymentForm',
+          //   element: <PaymentForm></PaymentForm>
+          // },
           {
             path: "paymentHistory",
-            element: PaymentHistory,
+            element: <PaymentHistory></PaymentHistory>,
           },
+          {
+            path:'reported-Products',
+            element: <ReportedProducts></ReportedProducts>
+          },
+          {
+            path: 'product-ReviewQueue',
+            element: <ProductReviewQueue></ProductReviewQueue>
+          }
         ],
       },
     ],

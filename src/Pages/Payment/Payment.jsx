@@ -1,32 +1,15 @@
+import React from "react";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import PaymentForm from "./PaymentForm";
 
-import { useState } from "react";
-import useAuth from "../../hooks/UseAuth";
-import useAxios from "../../hooks/useAxios";
+const stripePromise = loadStripe(import.meta.env.VITE_PUBLISHABLE_KEY);
 
 const Payment = () => {
-  const { user } = useAuth();
-  const [coupon, setCoupon] = useState("");
-
-  const handlePay = async () => {
-    const res = await useAxios.post("/payment/create-checkout-session", {
-      userEmail: user.email,
-      coupon: coupon,
-    });
-    window.location.href = res.data.url;
-  };
-
   return (
-    <div className="space-y-2">
-      <input
-        type="text"
-        placeholder="Coupon code (optional)"
-        onChange={(e) => setCoupon(e.target.value)}
-        className="input input-bordered"
-      />
-      <button onClick={handlePay} className="btn btn-primary">
-        Subscribe
-      </button>
-    </div>
+    <Elements stripe={stripePromise}>
+      <PaymentForm />
+    </Elements>
   );
 };
 

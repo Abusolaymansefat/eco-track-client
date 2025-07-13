@@ -24,7 +24,7 @@ const PaymentHistory = () => {
               <tr key={p._id}>
                 <td>{new Date(p.date).toLocaleDateString()}</td>
                 <td>{p.userEmail}</td>
-                <td>${p.amount / 100}</td>
+                <td>${(p.amount / 100).toFixed(2)}</td>
               </tr>
             ))}
           </tbody>

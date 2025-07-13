@@ -1,3 +1,7 @@
+// import { useQuery } from "@tanstack/react-query";
+// import useAuth from "./UseAuth";
+// import useAxios from "./useAxios";
+
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "./UseAuth";
 import useAxios from "./useAxios";
@@ -8,7 +12,7 @@ const usePayment = () => {
 
   const { data: payments = [], isLoading } = useQuery({
     queryKey: ["paymentHistory", user?.email],
-    enabled: !!user?.email,
+    enabled: !!user?.email, // ইউজার লোড না হলে ফেচ করবে না
     queryFn: async () => {
       const res = await axiosSecure.get(`/api/payment/payment-history/${user.email}`);
       return res.data;
