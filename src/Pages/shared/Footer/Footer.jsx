@@ -6,7 +6,7 @@ import {
   FaThList,
   FaSignInAlt,
 } from "react-icons/fa";
-import home12Logo from "../../../assets/logo/loader.png";
+import home12Logo from "../../../assets/logo-1.png";
 
 const Footer = () => {
   return (
@@ -18,7 +18,7 @@ const Footer = () => {
             <img
               src={home12Logo}
               alt="logo"
-              className="h-12 w-auto object-contain bg-white p-1 rounded"
+              className="h-12 w-auto object-contain p-1 rounded"
             />
           </NavLink>
         </div>

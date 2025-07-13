@@ -14,7 +14,7 @@ const Login = () => {
     try {
       await login(data.email, data.password);
       toast.success("Login successful");
-      navigate("/");
+      navigate("/"); 
     } catch (err) {
       toast.error("Login failed: " + err.message);
     }
@@ -22,19 +22,37 @@ const Login = () => {
 
   return (
     <div className="max-w-md mx-auto my-10 p-6 shadow rounded">
-      <h2 className="text-2xl font-bold mb-4">Login</h2>
+      <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <input {...register("email", { required: true })} placeholder="Email" className="w-full p-2 border" />
+        <input
+          {...register("email", { required: true })}
+          placeholder="Email"
+          className="w-full p-2 border rounded"
+        />
         {errors.email && <p className="text-red-500">Email is required</p>}
 
-        <input {...register("password", { required: true })} type="password" placeholder="Password" className="w-full p-2 border" />
+        <input
+          {...register("password", { required: true })}
+          type="password"
+          placeholder="Password"
+          className="w-full p-2 border rounded"
+        />
         {errors.password && <p className="text-red-500">Password is required</p>}
 
-        <button className="bg-blue-500 text-white py-2 px-4 rounded w-full">Login</button>
+        <button
+          type="submit"
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full"
+        >
+          Login
+        </button>
       </form>
 
       <p className="text-center mt-4">
-        Don't have an account? <Link to="/register" className="text-blue-600">Register</Link>
+        Don't have an account?{" "}
+        <Link to="/register" className="text-blue-600 hover:underline">
+          Register
+        </Link>
       </p>
 
       <SocialLogin />

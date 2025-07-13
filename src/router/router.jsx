@@ -16,6 +16,10 @@ import Payment from "../Pages/Payment/Payment";
 import PaymentHistory from "../Pages/Payment/PaymentHistory";
 import ReportedProducts from "../Pages/ReportedProducts/ReportedProducts";
 import ProductReviewQueue from "../Pages/ProductReviewQueue/ProductReviewQueue";
+import Statistics from "../Pages/shared/Statistics/Statistics";
+import ManageUsers from "../Pages/shared/ManageUsers/ManageUsers";
+import ManageCoupons from "../Pages/shared/ManageCoupons/ManageCoupons";
+import AdminRoute from "../Pages/shared/AdminRoute/AdminRoute";
 // import PaymentForm from "../Pages/Payment/PaymentForm";
 
 export const router = createBrowserRouter([
@@ -65,22 +69,43 @@ export const router = createBrowserRouter([
             path: "payment",
             element: <Payment />,
           },
-          // {
-          //   path: 'paymentForm',
-          //   element: <PaymentForm></PaymentForm>
-          // },
+
           {
             path: "paymentHistory",
             element: <PaymentHistory></PaymentHistory>,
           },
           {
-            path:'reported-Products',
-            element: <ReportedProducts></ReportedProducts>
+            path: "reported-Products",
+            element: <ReportedProducts></ReportedProducts>,
           },
           {
-            path: 'product-ReviewQueue',
-            element: <ProductReviewQueue></ProductReviewQueue>
-          }
+            path: "product-ReviewQueue",
+            element: <ProductReviewQueue></ProductReviewQueue>,
+          },
+          {
+            path: "statistics",
+            element: (
+              <AdminRoute>
+                <Statistics />
+              </AdminRoute>
+            ),
+          },
+          {
+            path: "manage-users",
+            element: (
+              <AdminRoute>
+                <ManageUsers />
+              </AdminRoute>
+            ),
+          },
+          {
+            path: "manage-coupons",
+            element: (
+              <AdminRoute>
+                <ManageCoupons />
+              </AdminRoute>
+            ),
+          },
         ],
       },
     ],

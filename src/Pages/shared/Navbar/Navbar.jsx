@@ -14,6 +14,7 @@ import home12Logo from "../../../assets/logo-1.png";
 import { toast } from "react-toastify";
 import { AuthContext } from "../../../Context/AuthContext/AuthContext";
 
+
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
 
@@ -83,7 +84,7 @@ const Navbar = () => {
           <img
             src={home12Logo}
             alt="logo"
-            className="h-12 w-auto object-contain  p-1 rounded"
+            className="h-12 w-auto object-contain  p-1"
           />
         </NavLink>
       </div>

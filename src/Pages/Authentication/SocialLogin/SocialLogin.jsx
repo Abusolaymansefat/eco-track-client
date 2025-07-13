@@ -1,9 +1,8 @@
 import { useContext } from "react";
 import { AuthContext } from "../../../Context/AuthContext/AuthContext";
-import { useNavigate } from "react-router"; 
+import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 import { FcGoogle } from "react-icons/fc";
-
 
 const SocialLogin = () => {
   const { googleLogin } = useContext(AuthContext);
@@ -11,10 +10,36 @@ const SocialLogin = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      await googleLogin();
-      toast.success("Google login successful");
+      const result = await googleLogin();
+      const user = result.user;
+
+      // ✅ Save Google user to MongoDB
+      const userForDB = {
+        name: user.displayName,
+        email: user.email,
+        photoURL: user.photoURL,
+        role: "user",
+        isSubscribed: false,
+      };
+
+      const res = await fetch("http://localhost:3000/users", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(userForDB),
+      });
+
+      if (res.status === 409) {
+        // user already exists
+        toast.info("Welcome back!");
+      } else if (res.ok) {
+        toast.success("Google login successful");
+      } else {
+        throw new Error("MongoDB save failed");
+      }
+
       navigate("/");
     } catch (error) {
+      console.error(error);
       toast.error("Google login failed: " + error.message);
     }
   };
