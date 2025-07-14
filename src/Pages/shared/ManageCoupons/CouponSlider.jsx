@@ -3,10 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import useAxios from "../../../hooks/useAxios";
 import Slider from "react-slick";
 
-// Import slick-carousel CSS (ensure installed slick-carousel package)
+// Import slick-carousel CSS
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
 
 const CouponSlider = () => {
   const axiosSecure = useAxios();
@@ -15,10 +14,11 @@ const CouponSlider = () => {
     queryKey: ["coupons"],
     queryFn: async () => {
       const res = await axiosSecure.get("/coupons");
-      // Only show coupons that are not expired
+      
       return res.data.filter(coupon => new Date(coupon.expiry) >= new Date());
     },
-    staleTime: 1000 * 60 * 5, // cache for 5 minutes
+    staleTime: 0,             
+    // refetchInterval: 3000,      
   });
 
   const settings = {
@@ -43,15 +43,25 @@ const CouponSlider = () => {
   if (coupons.length === 0) return <p className="text-center py-10">No active coupons available.</p>;
 
   return (
-    <div className="max-w-2xl mx-auto py-10 bg-[#90addf] rounded-4xl px-4">
-      <h2 className="text-3xl font-bold mb-6 text-center"> Discount Coupons</h2>
+    <div className="max-w-2xl mx-auto py-10 bg-[#90addf] rounded-3xl px-4">
+      <h2 className="text-3xl font-bold mb-6 text-center text-[#492fde]"> Discount Coupons</h2>
       <Slider {...settings}>
         {coupons.map(coupon => (
-          <div key={coupon._id} className=" rounded-lg shadow-md p-6 mx-3 text-center">
-            <h3 className="font-bold text-[#572eb8] text-4xl mb-2">{coupon.code}</h3>
+          <div
+            key={coupon._id}
+            className="bg-[#dbd2f0] rounded-xl shadow-md gap-5 p-6 mx-3 text-center"
+          >
+            <h3 className="font-bold w-[60px] text-[#572eb8] text-4xl mb-2 uppercase">
+              {coupon.code}
+            </h3>
             <p className="mb-1 text-gray-700">{coupon.description}</p>
-            <p className="mb-1 text-green-700 font-semibold">{coupon.discount}20% OFF</p>
-            <p className="text-sm text-gray-500">Expires on: {new Date(coupon.expiry).toLocaleDateString()}</p>
+            <p className="mb-1 text-green-700 font-semibold text-lg">
+              {coupon.discount}% OFF
+            </p>
+            <p className="text-sm text-gray-500">
+              Expires on:{" "}
+              {new Date(coupon.expiry).toLocaleDateString()}
+            </p>
           </div>
         ))}
       </Slider>

@@ -28,9 +28,7 @@ const ProductReviewQueue = () => {
     await axiosSecure.patch(`/products/status/${id}`, { status: newStatus });
     toast.success(`✅ Product ${newStatus}`);
     setProducts((prev) =>
-      prev.map((p) =>
-        p._id === id ? { ...p, status: newStatus } : p
-      )
+      prev.map((p) => (p._id === id ? { ...p, status: newStatus } : p))
     );
   };
 
@@ -51,8 +49,18 @@ const ProductReviewQueue = () => {
               <td>{p.name}</td>
               <td>{p.status || "Pending"}</td>
               <td className="space-x-2">
-                <button onClick={() => navigate(`/product/${p._id}`)} className="btn btn-sm btn-info">View</button>
-                <button onClick={() => handleMakeFeatured(p._id)} className="btn btn-sm btn-warning">Make Featured</button>
+                <button
+                  onClick={() => navigate(`/product/${p._id}`)}
+                  className="btn btn-sm btn-info"
+                >
+                  View
+                </button>
+                <button
+                  onClick={() => handleMakeFeatured(p._id)}
+                  className="btn btn-sm btn-warning"
+                >
+                  Make Featured
+                </button>
                 <button
                   onClick={() => handleStatusUpdate(p._id, "Accepted")}
                   className="btn btn-sm btn-success"

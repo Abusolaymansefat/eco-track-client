@@ -33,19 +33,16 @@ const MyProfile = () => {
   };
 
   return (
-    <div className="p-6 max-w-md mx-auto shadow rounded-xl">
-      <h2 className="text-2xl font-bold mb-4 text-center">My Profile</h2>
+    <div className="p-6 max-w-md mx-auto shadow rounded-xl bg-[#61b2f5] text-[#d6fb72] text-center">
+      <h2 className="text-2xl font-bold mb-4">My Profile</h2>
       <img
         src={user?.photoURL}
         alt={user?.displayName}
         className="w-24 h-24 rounded-full mx-auto mb-4"
       />
-      <p className="text-center">
-        <strong>Name:</strong> {user?.displayName}
-      </p>
-      <p className="text-center">
-        <strong>Email:</strong> {user?.email}
-      </p>
+      <p><strong>Name:</strong> {user?.displayName}</p>
+      <p><strong>Email:</strong> {user?.email}</p>
+      <p><strong>Role:</strong> {userData?.role || "user"}</p>
 
       <button
         onClick={handleSubscribe}
@@ -53,16 +50,24 @@ const MyProfile = () => {
         disabled={isSubscribed}
         title={isSubscribed ? "Already Subscribed" : ""}
       >
-        {isSubscribed ? "✅ Subscribed" : `Subscribe for $20`}
+        {isSubscribed ? "✅ Subscribed" : `Subscribe for $30`}
       </button>
 
       {isSubscribed && (
-        <p className="mt-4 text-green-600 font-semibold text-center">
-          Membership Status: <span className="text-xl">✅ Verified</span>
-        </p>
+        <>
+          <p className="mt-4 text-green-600 font-semibold">
+            Membership Status: ✅ Verified
+          </p>
+          {userData?.coupon && (
+            <p className="text-blue-800 mt-1 text-sm">
+              Coupon Used: <strong>{userData.coupon}</strong>
+            </p>
+          )}
+        </>
       )}
     </div>
   );
 };
 
 export default MyProfile;
+
