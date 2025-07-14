@@ -6,6 +6,7 @@ import Testimonials from '../shared/Sections/Testimonials';
 import WhyChooseUs from './WhyChooseUs';
 import TrendingProducts from '../TrendingProducts.jsxTrendingProducts/TrendingProducts';
 import FeaturedProducts from '../shared/FeaturedProducts/FeaturedProducts';
+import CouponSlider from '../shared/ManageCoupons/CouponSlider';
 
 
 const Home = () => {
@@ -18,6 +19,8 @@ const Home = () => {
             <PartnersSection></PartnersSection>
             <WhyChooseUs></WhyChooseUs>
             <Testimonials></Testimonials>
+            <CouponSlider></CouponSlider>
+
             
         </div>
     );
