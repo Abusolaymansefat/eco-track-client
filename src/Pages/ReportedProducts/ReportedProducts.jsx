@@ -1,8 +1,3 @@
-// import { useEffect, useState } from "react";
-// import useAxios from "../../hooks/useAxios";
-// import { useNavigate } from "react-router-dom";
-// import { toast } from "react-toastify";
-
 import { useEffect, useState } from "react";
 import useAxios from "../../hooks/useAxios";
 import { useNavigate } from "react-router";

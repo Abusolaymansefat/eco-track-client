@@ -50,7 +50,7 @@ const ProductReviewQueue = () => {
               <td>{p.status || "Pending"}</td>
               <td className="space-x-2">
                 <button
-                  onClick={() => navigate(`/product/${p._id}`)}
+                  onClick={() => navigate(`/products/${p._id}`)} // products, plural
                   className="btn btn-sm btn-info"
                 >
                   View
