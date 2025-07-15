@@ -10,14 +10,15 @@ const SocialLogin = () => {
 
   const handleGoogleLogin = async () => {
     try {
+      // ১. গুগল লগইন
       const result = await googleLogin();
       const user = result.user;
 
-      // ✅ Get Firebase JWT Token
+      // ২. Firebase JWT access token সংগ্রহ
       const token = await user.getIdToken();
       localStorage.setItem("accessToken", token);
 
-      // ✅ Save to MongoDB
+      // ৩. MongoDB-তে ইউজার সংরক্ষণ (Backend authorization সহ)
       const userForDB = {
         name: user.displayName,
         email: user.email,
@@ -30,21 +31,24 @@ const SocialLogin = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, 
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(userForDB),
       });
 
       if (res.status === 409) {
-        toast.info("Welcome back!");
+        toast.info("👋 Welcome back!");
       } else if (res.ok) {
-        toast.success("Google login successful");
+        toast.success("✅ Google login successful");
+      } else {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Failed to save user.");
       }
 
       navigate("/");
     } catch (error) {
-      console.error(error);
-      toast.error("Google login failed");
+      console.error("Google login error:", error);
+      toast.error("❌ Login failed: " + error.message);
     }
   };
 
