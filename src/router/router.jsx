@@ -40,7 +40,8 @@ export const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <PrivateRoute><AllProducts /></PrivateRoute>,
+        element: <AllProducts />
+        // element: <PrivateRoute><AllProducts /></PrivateRoute>,
       },
       {
         path: 'forbidden',

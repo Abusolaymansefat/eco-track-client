@@ -1,85 +1,90 @@
-import { useEffect, useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxios from "../../hooks/useAxios";
-import { useNavigate } from "react-router";
 import { toast } from "react-toastify";
 
 const ProductReviewQueue = () => {
   const axiosSecure = useAxios();
-  const [products, setProducts] = useState([]);
-  const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    axiosSecure.get("/products").then((res) => {
-      // Sort: Pending > Accepted > Rejected
-      const sorted = res.data.products.sort((a, b) => {
-        const statusOrder = { Pending: 0, Accepted: 1, Rejected: 2 };
-        return statusOrder[a.status] - statusOrder[b.status];
-      });
-      setProducts(sorted);
-    });
-  }, [axiosSecure]);
+  // Load pending products
+  const { data: pendingProducts = [], isLoading } = useQuery({
+    queryKey: ["pendingProducts"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/products/review");
+      return res.data;
+    },
+  });
 
-  const handleMakeFeatured = async (id) => {
-    await axiosSecure.patch(`/products/featured/${id}`);
-    toast.success("✅ Marked as Featured");
-  };
+  // Approve or Reject mutation
+  const updateStatus = useMutation({
+    mutationFn: async ({ id, status }) => {
+      const res = await axiosSecure.patch(`/products/status/${id}`, { status });
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Status updated!");
+      queryClient.invalidateQueries(["pendingProducts"]);
+    },
+    onError: () => {
+      toast.error("Failed to update status.");
+    },
+  });
 
-  const handleStatusUpdate = async (id, newStatus) => {
-    await axiosSecure.patch(`/products/status/${id}`, { status: newStatus });
-    toast.success(`✅ Product ${newStatus}`);
-    setProducts((prev) =>
-      prev.map((p) => (p._id === id ? { ...p, status: newStatus } : p))
-    );
+  const handleUpdate = (id, status) => {
+    updateStatus.mutate({ id, status });
   };
 
   return (
-    <div className="overflow-x-auto">
-      <h2 className="text-2xl font-bold mb-4">🕵️ Product Review Queue</h2>
-      <table className="table table-zebra w-full">
-        <thead>
-          <tr>
-            <th>Product Name</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {products.map((p) => (
-            <tr key={p._id}>
-              <td>{p.name}</td>
-              <td>{p.status || "Pending"}</td>
-              <td className="space-x-2">
+    <div className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-3xl font-bold text-center mb-6">
+        🧐 Product Review Queue
+      </h2>
+
+      {isLoading ? (
+        <p className="text-center text-blue-500">Loading...</p>
+      ) : pendingProducts.length === 0 ? (
+        <p className="text-center text-green-600">No pending products ✅</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {pendingProducts.map((product) => (
+            <div
+              key={product._id}
+              className="border p-4 rounded shadow hover:shadow-md transition"
+            >
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-40 object-cover rounded"
+              />
+              <h3 className="text-lg font-semibold mt-2">{product.name}</h3>
+              <div className="flex flex-wrap gap-1 mt-2">
+                {product.tags?.map((tag, idx) => (
+                  <span
+                    key={idx}
+                    className="px-2 py-1 text-xs rounded-full text-gray-700"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div className="flex gap-3 mt-4">
                 <button
-                  onClick={() => navigate(`/products/${p._id}`)} // products, plural
-                  className="btn btn-sm btn-info"
+                  onClick={() => handleUpdate(product._id, "Approved")}
+                  className="btn btn-success btn-sm"
                 >
-                  View
+                  ✅ Approve
                 </button>
                 <button
-                  onClick={() => handleMakeFeatured(p._id)}
-                  className="btn btn-sm btn-warning"
+                  onClick={() => handleUpdate(product._id, "Rejected")}
+                  className="btn btn-error btn-sm"
                 >
-                  Make Featured
+                  ❌ Reject
                 </button>
-                <button
-                  onClick={() => handleStatusUpdate(p._id, "Accepted")}
-                  className="btn btn-sm btn-success"
-                  disabled={p.status === "Accepted"}
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() => handleStatusUpdate(p._id, "Rejected")}
-                  className="btn btn-sm btn-error"
-                  disabled={p.status === "Rejected"}
-                >
-                  Reject
-                </button>
-              </td>
-            </tr>
+              </div>
+            </div>
           ))}
-        </tbody>
-      </table>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,9 +1,10 @@
 import { Link, useNavigate } from "react-router";
-import useAuth from "../../../hooks/UseAuth";
-import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
+import useAxios from "../../../hooks/useAxios";
+import useAuth from "../../../hooks/UseAuth";
+
 
 const FeaturedProducts = () => {
   const axiosSecure = useAxios();
@@ -12,12 +13,13 @@ const FeaturedProducts = () => {
   const queryClient = useQueryClient();
 
   const { data: featuredProducts = [], isLoading } = useQuery({
-    queryKey: ["featuredProducts"],
-    queryFn: async () => {
-      const res = await axiosSecure.get("/products/featured");
-      return res.data;
-    },
-  });
+  queryKey: ["featuredProducts"],
+  queryFn: async () => {
+     console.log('data....')
+    const res = await axiosSecure.get("/products/featured");
+    return res.data;
+  },
+});
 
   const upvoteMutation = useMutation({
     mutationFn: async (id) => {

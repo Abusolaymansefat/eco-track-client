@@ -1,10 +1,10 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "http://localhost:3000", 
 });
 
-// ✅ Add JWT to headers
+// Interceptor to add token to each request
 axiosInstance.interceptors.request.use((config) => {
   const token = localStorage.getItem("accessToken");
   if (token) {
@@ -13,6 +13,8 @@ axiosInstance.interceptors.request.use((config) => {
   return config;
 });
 
-const useAxios = () => axiosInstance;
+const useAxios = () => {
+  return axiosInstance;
+};
 
 export default useAxios;

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import useAxios from "../../hooks/useAxios";
 import { Link, useNavigate } from "react-router";
 import { FaFire, FaThumbsUp } from "react-icons/fa";
 import { toast } from "react-toastify";
-import useAuth from "../../hooks/UseAuth";
+import useAxios from "../../hooks/useAxios";
+import useAuth from "../../hooks/useAuth";
 
 const TrendingProducts = () => {
   const [products, setProducts] = useState([]);

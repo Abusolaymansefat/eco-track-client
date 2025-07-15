@@ -1,13 +1,13 @@
-// import { useEffect, useState } from "react";
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 // import { Link, useNavigate } from "react-router";
+// import useAuth from "../../../hooks/UseAuth";
+// import useAxios from "../../../hooks/useAxios";
+// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+// import { useEffect, useState } from "react";
 // import { toast } from "react-toastify";
 // import { FaThumbsUp } from "react-icons/fa";
-// import useAxios from "../../../hooks/useAxios";
-// import useAuth from "../../../hooks/UseAuth";
 
 import { Link, useNavigate } from "react-router";
-import useAuth from "../../../hooks/UseAuth";
+import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
@@ -36,16 +36,24 @@ const AllProducts = () => {
   } = useQuery({
     queryKey: ["allProducts", page, searchTerm],
     queryFn: async () => {
-      const res = await axiosSecure.get(
-        `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`
-      );
-      return res.data;
+      try {
+        const res = await axiosSecure.get(
+          `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(
+            searchTerm
+          )}`
+        );
+        return res.data;
+      } catch (err) {
+        console.error("❌ Product fetch failed:", err);
+        throw err;
+      }
     },
     keepPreviousData: true,
   });
 
-  const products = data.products || [];
-  const totalPages = Math.max(1, Math.ceil(data.total / limit));
+  // Safety check for products array and total count
+  const products = Array.isArray(data?.products) ? data.products : [];
+  const totalPages = Math.max(1, Math.ceil((data?.total || 0) / limit));
 
   const upvoteMutation = useMutation({
     mutationFn: async (id) => {
@@ -63,7 +71,10 @@ const AllProducts = () => {
   });
 
   const handleUpvote = (product) => {
-    if (!user) return navigate("/login");
+    if (!user) {
+      toast.error("Please login to upvote.");
+      return navigate("/login");
+    }
     if (product.voters?.includes(user.email)) {
       toast.error("You already voted!");
       return;
@@ -75,7 +86,7 @@ const AllProducts = () => {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold text-center mb-6">🛍️ All Products</h2>
 
-      {/* Search Box */}
+      {/* Search Input */}
       <div className="max-w-md mx-auto mb-8">
         <input
           type="text"
@@ -86,25 +97,23 @@ const AllProducts = () => {
         />
       </div>
 
-      {/* Loading/Error States */}
+      {/* Loading/Error/No products */}
       {isLoading && <p className="text-center text-blue-500">Loading...</p>}
       {isError && (
         <p className="text-center text-red-500">
           Failed to load products: {error.message}
         </p>
       )}
-
-      {/* Product Grid */}
       {!isLoading && !isError && products.length === 0 && (
         <p className="text-center text-red-500">No products found.</p>
       )}
 
+      {/* Products Grid */}
       {!isLoading && !isError && products.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
             const alreadyVoted = product.voters?.includes(user?.email);
             const isOwner = user?.email === product.ownerEmail;
-
             const tagsArray = Array.isArray(product.tags)
               ? product.tags
               : product.tags?.split(",") || [];
@@ -159,10 +168,10 @@ const AllProducts = () => {
         </div>
       )}
 
-      {/* Pagination */}
+      {/* Pagination Controls */}
       <div className="flex justify-center mt-10 gap-4">
         <button
-          onClick={() => setPage((prev) => prev - 1)}
+          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}
           className="btn btn-sm btn-outline"
         >
@@ -172,7 +181,7 @@ const AllProducts = () => {
           Page {page} of {totalPages}
         </span>
         <button
-          onClick={() => setPage((prev) => prev + 1)}
+          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
           disabled={page >= totalPages}
           className="btn btn-sm btn-outline"
         >
