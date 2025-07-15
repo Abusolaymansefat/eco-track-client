@@ -73,7 +73,7 @@ const FeaturedProducts = () => {
 
               <div className="flex flex-wrap gap-2 my-2">
                 {tagsArray.map((tag, idx) => (
-                  <span key={idx} className="text-xs px-2 py-1 rounded-full bg-gray-200">
+                  <span key={idx} className="text-xs px-2 py-1 rounded-full bg-[#9dcece]">
                     {tag.trim()}
                   </span>
                 ))}

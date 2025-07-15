@@ -1,13 +1,30 @@
 import React from "react";
+import AdminDashboard from "../DashboardHome/AdminDashboard";
+import MembershipDashboard from "../DashboardHome/MembershipDashboard";
+import UserDashboard from "../DashboardHome/UserDashboard";
+import useAdmin from "../../../hooks/useAdmin";
+import Forbidden from "../../shared/Forbidden/Forbidden";
 
 const DashboardHome = () => {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold mb-4">Welcome to Your Dashboard</h1>
-      <p>Select an option from the sidebar.</p>
-    </div>
-  );
-};
+  const {role, roleLoading} = useAdmin();
+
+    if(roleLoading){
+        return <Loading></Loading>
+    }
+
+    if(role === 'user'){
+        return <UserDashboard></UserDashboard>
+    }
+    else if(role === 'Membership'){
+        return <MembershipDashboard></MembershipDashboard>
+    }
+    else if(role === 'admin'){
+        return <AdminDashboard></AdminDashboard>
+    }
+    else{
+        return <Forbidden></Forbidden>
+    }
+  }
 
 
 export default DashboardHome;

@@ -1,8 +1,16 @@
+// import { useEffect, useState } from "react";
+// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+// import { Link, useNavigate } from "react-router";
+// import { toast } from "react-toastify";
+// import { FaThumbsUp } from "react-icons/fa";
+// import useAxios from "../../../hooks/useAxios";
+// import useAuth from "../../../hooks/UseAuth";
+
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/UseAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
 
@@ -16,25 +24,28 @@ const AllProducts = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const limit = 6;
 
-  // Reset page when searchTerm changes
   useEffect(() => {
     setPage(1);
   }, [searchTerm]);
 
-  const { data = { products: [], total: 0 }, isLoading } = useQuery({
+  const {
+    data = { products: [], total: 0 },
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
     queryKey: ["allProducts", page, searchTerm],
     queryFn: async () => {
-      // Call API with searchTerm as query param
       const res = await axiosSecure.get(
         `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(searchTerm)}`
       );
-      return res.data; // Expected { products, total }
+      return res.data;
     },
     keepPreviousData: true,
   });
 
   const products = data.products || [];
-  const totalPages = Math.ceil(data.total / limit);
+  const totalPages = Math.max(1, Math.ceil(data.total / limit));
 
   const upvoteMutation = useMutation({
     mutationFn: async (id) => {
@@ -46,7 +57,9 @@ const AllProducts = () => {
       toast.success("Upvoted!");
       queryClient.invalidateQueries(["allProducts", page, searchTerm]);
     },
-    onError: () => toast.error("Already voted or failed!"),
+    onError: () => {
+      toast.error("You already voted or something went wrong.");
+    },
   });
 
   const handleUpvote = (product) => {
@@ -62,7 +75,7 @@ const AllProducts = () => {
     <div className="max-w-7xl mx-auto px-4 py-10">
       <h2 className="text-3xl font-bold text-center mb-6">🛍️ All Products</h2>
 
-      {/* Search box */}
+      {/* Search Box */}
       <div className="max-w-md mx-auto mb-8">
         <input
           type="text"
@@ -73,15 +86,28 @@ const AllProducts = () => {
         />
       </div>
 
-      {isLoading ? (
-        <p className="text-center">Loading...</p>
-      ) : products.length === 0 ? (
+      {/* Loading/Error States */}
+      {isLoading && <p className="text-center text-blue-500">Loading...</p>}
+      {isError && (
+        <p className="text-center text-red-500">
+          Failed to load products: {error.message}
+        </p>
+      )}
+
+      {/* Product Grid */}
+      {!isLoading && !isError && products.length === 0 && (
         <p className="text-center text-red-500">No products found.</p>
-      ) : (
+      )}
+
+      {!isLoading && !isError && products.length > 0 && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {products.map((product) => {
             const alreadyVoted = product.voters?.includes(user?.email);
             const isOwner = user?.email === product.ownerEmail;
+
+            const tagsArray = Array.isArray(product.tags)
+              ? product.tags
+              : product.tags?.split(",") || [];
 
             return (
               <div
@@ -100,9 +126,12 @@ const AllProducts = () => {
                 </Link>
 
                 <div className="flex flex-wrap gap-2 my-2">
-                  {product.tags?.map((tag, idx) => (
-                    <span key={idx} className="px-2 py-1 text-xs rounded-full">
-                      {tag}
+                  {tagsArray.map((tag, idx) => (
+                    <span
+                      key={idx}
+                      className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
+                    >
+                      {tag.trim()}
                     </span>
                   ))}
                 </div>
@@ -130,7 +159,7 @@ const AllProducts = () => {
         </div>
       )}
 
-      {/* Pagination Controls */}
+      {/* Pagination */}
       <div className="flex justify-center mt-10 gap-4">
         <button
           onClick={() => setPage((prev) => prev - 1)}

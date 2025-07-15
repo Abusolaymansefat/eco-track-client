@@ -22,6 +22,7 @@ import ManageCoupons from "../Pages/shared/ManageCoupons/ManageCoupons";
 import AdminRoute from "../Pages/shared/AdminRoute/AdminRoute";
 import MyProducts from "../Pages/shared/MyProducts/MyProducts";
 import UpdateProduct from "../Pages/shared/UpdateProduct/UpdateProduct";
+import Forbidden from "../Pages/shared/Forbidden/Forbidden";
  
 
 export const router = createBrowserRouter([
@@ -34,13 +35,17 @@ export const router = createBrowserRouter([
         element: <Home></Home>,
       },
       {
-        path: "products/:id",
+        path: "/products/:id",
         element: <ProductDetails />,
       },
       {
         path: "/products",
         element: <PrivateRoute><AllProducts /></PrivateRoute>,
       },
+      {
+        path: 'forbidden',
+        element: <Forbidden></Forbidden>
+      }
     ],
   },
   {
@@ -72,11 +77,7 @@ export const router = createBrowserRouter([
           {
             path: "update-product/:id",
             element: <UpdateProduct />
-            // element: (
-            //   <PrivateRoute>
-            //     <UpdateProduct />
-            //   </PrivateRoute>
-            // ),
+            
           },
           {
             path: "payment",

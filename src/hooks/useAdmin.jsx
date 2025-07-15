@@ -1,7 +1,3 @@
-// import { useQuery } from "@tanstack/react-query";
-// import useAuth from "./UseAuth";
-// import useAxios from "./useAxios";
-
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "./UseAuth";
 import useAxios from "./useAxios";
