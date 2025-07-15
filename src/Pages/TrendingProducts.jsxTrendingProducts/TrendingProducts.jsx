@@ -15,7 +15,9 @@ const TrendingProducts = () => {
     axiosSecure
       .get("/products")
       .then((res) => {
-        const allProducts = Array.isArray(res.data) ? res.data : res.data.products || [];
+        const allProducts = Array.isArray(res.data)
+          ? res.data
+          : res.data.products || [];
         const trending = allProducts
           .sort((a, b) => b.upvotes - a.upvotes)
           .slice(0, 6);
@@ -61,9 +63,8 @@ const TrendingProducts = () => {
   };
 
   return (
-    <section className=" py-16">
+    <section className="py-16">
       <div className="max-w-7xl mx-auto px-4">
-        {/* Section Title */}
         <div className="text-center mb-10">
           <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
             <FaFire className="text-red-500" /> Trending Products
@@ -73,12 +74,11 @@ const TrendingProducts = () => {
           </p>
         </div>
 
-        {/* Product Grid */}
         <div className="grid md:grid-cols-3 gap-6">
           {products.map((product) => (
             <div
               key={product._id}
-              className="border rounded-lg p-4 shadow hover:shadow-md transition "
+              className="border rounded-lg p-4 shadow hover:shadow-md transition"
             >
               <div className="overflow-hidden rounded">
                 <img
@@ -96,12 +96,15 @@ const TrendingProducts = () => {
               </Link>
 
               <p className="mt-2 text-sm text-gray-700">
-                {product.tags?.map((tag, idx) => (
+                {(Array.isArray(product.tags)
+                  ? product.tags
+                  : product.tags?.split(",") || []
+                ).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="inline-block  text-xs px-2 py-1 rounded-full mr-1"
+                    className="inline-block text-xs px-2 py-1 rounded-full mr-1 bg-gray-200"
                   >
-                    {tag}
+                    {tag.trim()}
                   </span>
                 ))}
               </p>
@@ -109,7 +112,10 @@ const TrendingProducts = () => {
               <button
                 className="btn btn-sm mt-3 flex items-center gap-1"
                 onClick={() => handleUpvote(product)}
-                disabled={user?.email === product.ownerEmail || product.voters?.includes(user?.email)}
+                disabled={
+                  user?.email === product.ownerEmail ||
+                  product.voters?.includes(user?.email)
+                }
               >
                 <FaThumbsUp />
                 {product.upvotes}
@@ -118,7 +124,6 @@ const TrendingProducts = () => {
           ))}
         </div>
 
-        {/* View All Button */}
         <div className="text-center mt-10">
           <Link to="/products" className="btn btn-outline btn-primary">
             Show All Products

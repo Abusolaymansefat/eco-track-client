@@ -52,11 +52,17 @@ const AuthProvider = ({ children }) => {
   };
 
  
-  useEffect(() => {
-  const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-    console.log("Auth State Changed:", currentUser); 
+ useEffect(() => {
+  const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
     setUser(currentUser);
     setLoading(false);
+
+    if (currentUser) {
+      const token = await currentUser.getIdToken(); 
+      localStorage.setItem("accessToken", token);
+    } else {
+      localStorage.removeItem("accessToken");
+    }
   });
 
   return () => unsubscribe();

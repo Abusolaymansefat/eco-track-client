@@ -13,7 +13,11 @@ const SocialLogin = () => {
       const result = await googleLogin();
       const user = result.user;
 
-      // ✅ Save Google user to MongoDB
+      // ✅ Get Firebase JWT Token
+      const token = await user.getIdToken();
+      localStorage.setItem("accessToken", token);
+
+      // ✅ Save to MongoDB
       const userForDB = {
         name: user.displayName,
         email: user.email,
@@ -24,23 +28,23 @@ const SocialLogin = () => {
 
       const res = await fetch("http://localhost:3000/users", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, 
+        },
         body: JSON.stringify(userForDB),
       });
 
       if (res.status === 409) {
-        // user already exists
         toast.info("Welcome back!");
       } else if (res.ok) {
         toast.success("Google login successful");
-      } else {
-        throw new Error("MongoDB save failed");
       }
 
       navigate("/");
     } catch (error) {
       console.error(error);
-      toast.error("Google login failed: " + error.message);
+      toast.error("Google login failed");
     }
   };
 

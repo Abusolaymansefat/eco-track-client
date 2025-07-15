@@ -61,6 +61,12 @@ const DashboardLayout = () => {
               <FaPlusCircle /> Add Product
             </Link>
             <Link
+              to="/dashboardLayout/my-Products"
+              className="flex items-center gap-2"
+            >
+              <FaPlusCircle /> My Products
+            </Link>
+            <Link
               to="/dashboardLayout/paymentHistory"
               className="flex items-center gap-2"
             >

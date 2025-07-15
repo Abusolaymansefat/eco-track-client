@@ -9,8 +9,8 @@ const ReportedProducts = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axiosSecure.get("/reported").then((res) => {
-      setReported(res.data); // should return joined data: product info + report info
+    axiosSecure.get("/reports").then((res) => {
+      setReported(res.data);
     });
   }, [axiosSecure]);
 

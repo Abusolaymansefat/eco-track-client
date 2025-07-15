@@ -47,12 +47,12 @@ const ProductDetails = () => {
   // Report Mutation with redirect on success
   const reportMutation = useMutation({
     mutationFn: () =>
-      axiosSecure.post(`/products/report/${id}`, {
+      axiosSecure.post(`/products/reports/${id}`, {
         userEmail: user?.email,
       }),
     onSuccess: () => {
       toast.success("Product reported!");
-      navigate("/dashboardLayout/reported-Products"); // তোমার ReportedContents পেজের রাউট
+      navigate("/dashboardLayout/reported-Products");
     },
     onError: () => toast.error("Failed to report product"),
   });

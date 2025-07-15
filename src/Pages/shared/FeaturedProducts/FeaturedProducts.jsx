@@ -45,16 +45,25 @@ const FeaturedProducts = () => {
 
   return (
     <section className="my-10 px-4 max-w-7xl mx-auto bg-gradient-to-br py-10 rounded-lg shadow">
-      <h2 className="text-3xl font-bold text-center mb-10">🔥 Featured Products</h2>
+      <h2 className="text-3xl font-bold text-center mb-10"> Featured Products</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {featuredProducts.slice(0, 6).map((product) => {
           const alreadyVoted = product.voters?.includes(user?.email);
           const isOwner = user?.email === product.ownerEmail;
 
+          // Convert tags string to array if needed
+          const tagsArray = Array.isArray(product.tags)
+            ? product.tags
+            : product.tags?.split(",") || [];
+
           return (
             <div key={product._id} className="border p-4 rounded-lg shadow-md">
-              <img src={product.image} alt={product.name} className="w-full h-40 object-cover rounded" />
+              <img
+                src={product.image}
+                alt={product.name}
+                className="w-full h-40 object-cover rounded"
+              />
 
               <Link to={`/products/${product._id}`}>
                 <h3 className="text-xl font-semibold text-blue-600 hover:underline mt-2">
@@ -63,9 +72,9 @@ const FeaturedProducts = () => {
               </Link>
 
               <div className="flex flex-wrap gap-2 my-2">
-                {product.tags?.map((tag, idx) => (
-                  <span key={idx} className=" text-xs px-2 py-1 rounded-full">
-                    {tag}
+                {tagsArray.map((tag, idx) => (
+                  <span key={idx} className="text-xs px-2 py-1 rounded-full bg-gray-200">
+                    {tag.trim()}
                   </span>
                 ))}
               </div>
@@ -82,7 +91,9 @@ const FeaturedProducts = () => {
 
               {(isOwner || alreadyVoted) && (
                 <p className="text-xs text-red-500 mt-1">
-                  {isOwner ? "You can't vote on your own product" : "You already voted"}
+                  {isOwner
+                    ? "You can't vote on your own product"
+                    : "You already voted"}
                 </p>
               )}
             </div>
@@ -90,7 +101,6 @@ const FeaturedProducts = () => {
         })}
       </div>
 
-      {/* 👉 Show All Products Button */}
       <div className="text-center mt-10">
         <Link to="/products">
           <button className="btn btn-outline btn-primary">Show All Products</button>

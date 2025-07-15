@@ -20,7 +20,9 @@ import Statistics from "../Pages/shared/Statistics/Statistics";
 import ManageUsers from "../Pages/shared/ManageUsers/ManageUsers";
 import ManageCoupons from "../Pages/shared/ManageCoupons/ManageCoupons";
 import AdminRoute from "../Pages/shared/AdminRoute/AdminRoute";
-// import PaymentForm from "../Pages/Payment/PaymentForm";
+import MyProducts from "../Pages/shared/MyProducts/MyProducts";
+import UpdateProduct from "../Pages/shared/UpdateProduct/UpdateProduct";
+ 
 
 export const router = createBrowserRouter([
   {
@@ -37,7 +39,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <AllProducts />,
+        element: <PrivateRoute><AllProducts /></PrivateRoute>,
       },
     ],
   },
@@ -64,7 +66,18 @@ export const router = createBrowserRouter([
         children: [
           { index: true, element: <DashboardHome /> },
           { path: "profile", element: <MyProfile /> },
+
           { path: "add-product", element: <AddProduct /> },
+          { path: "my-Products", element: <MyProducts></MyProducts> },
+          {
+            path: "update-product/:id",
+            element: <UpdateProduct />
+            // element: (
+            //   <PrivateRoute>
+            //     <UpdateProduct />
+            //   </PrivateRoute>
+            // ),
+          },
           {
             path: "payment",
             element: <Payment />,
