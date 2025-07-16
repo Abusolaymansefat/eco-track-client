@@ -1,9 +1,9 @@
-import useAuth from "../hooks/UseAuth";
-import useAxios from "../hooks/useAxios";
-import { useQuery } from "@tanstack/react-query";
+import { Link, Outlet } from "react-router";
 import Navbar from "../Pages/shared/Navbar/Navbar";
 import Footer from "../Pages/shared/Footer/Footer";
-import { Link, Outlet } from "react-router";
+import useAxios from "../hooks/useAxios";
+import useAuth from "../hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
 import {
   FaCheckCircle,
   FaExclamationCircle,
@@ -11,13 +11,17 @@ import {
   FaPlusCircle,
   FaTachometerAlt,
   FaUser,
+  FaBoxOpen,
+  FaChartBar,
+  FaUsers,
+  FaTicketAlt,
 } from "react-icons/fa";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
   const axiosSecure = useAxios();
 
-  // ✅ Fetch full user profile (including role)
+  // 🔒 Fetch user profile
   const { data: userData = {} } = useQuery({
     queryKey: ["userProfile", user?.email],
     enabled: !!user?.email,
@@ -27,7 +31,7 @@ const DashboardLayout = () => {
     },
   });
 
-  // ✅ Admin Check
+  // 🔐 Admin check
   const { data: isAdmin } = useQuery({
     queryKey: ["isAdmin", user?.email],
     enabled: !!user?.email,
@@ -48,78 +52,45 @@ const DashboardLayout = () => {
             <Link to="/dashboardLayout" className="flex items-center gap-2">
               <FaTachometerAlt /> Dashboard Home
             </Link>
-            <Link
-              to="/dashboardLayout/profile"
-              className="flex items-center gap-2"
-            >
+            <Link to="/dashboardLayout/profile" className="flex items-center gap-2">
               <FaUser /> My Profile
             </Link>
-            <Link
-              to="/dashboardLayout/add-product"
-              className="flex items-center gap-2"
-            >
+            <Link to="/dashboardLayout/add-product" className="flex items-center gap-2">
               <FaPlusCircle /> Add Product
             </Link>
-            <Link
-              to="/dashboardLayout/my-Products"
-              className="flex items-center gap-2"
-            >
-              <FaPlusCircle /> My Products
-            </Link>
-            <Link
-              to="/dashboardLayout/paymentHistory"
-              className="flex items-center gap-2"
-            >
+            <Link to="/dashboardLayout/paymentHistory" className="flex items-center gap-2">
               <FaHistory /> Payment History
             </Link>
 
-            {/* ✅ Membership Pages (role === 'membership') */}
+            {/* Membership role */}
             {userData?.role === "membership" && (
               <>
-                <Link
-                  to="/dashboardLayout/product-ReviewQueue"
-                  className="flex items-center gap-2"
-                >
+                <Link to="/dashboardLayout/my-Products" className="flex items-center gap-2">
+                  <FaBoxOpen /> My Products
+                </Link>
+                <Link to="/dashboardLayout/product-ReviewQueue" className="flex items-center gap-2">
                   <FaCheckCircle /> Product Review Queue
                 </Link>
-
-                <Link
-                  to="/dashboardLayout/reported-Products"
-                  className="flex items-center gap-2"
-                >
+                <Link to="/dashboardLayout/reported-Products" className="flex items-center gap-2">
                   <FaExclamationCircle /> Reported Products
                 </Link>
-                
               </>
             )}
 
-            {/* ✅ Admin Pages */}
+            {/* Admin role */}
             {isAdmin && (
               <>
-                <Link
-                  to="/dashboardLayout/statistics"
-                  className="flex items-center gap-2"
-                >
-                  📊 Statistics
+                <Link to="/dashboardLayout/statistics" className="flex items-center gap-2">
+                  <FaChartBar /> Statistics
                 </Link>
-
-                <Link
-                  to="/dashboardLayout/reported-Products"
-                  className="flex items-center gap-2"
-                >
+                <Link to="/dashboardLayout/reported-Products" className="flex items-center gap-2">
                   <FaExclamationCircle /> Reported Products
                 </Link>
-                <Link
-                  to="/dashboardLayout/manage-users"
-                  className="flex items-center gap-2"
-                >
-                  👤 Manage Users
+                <Link to="/dashboardLayout/manage-users" className="flex items-center gap-2">
+                  <FaUsers /> Manage Users
                 </Link>
-                <Link
-                  to="/dashboardLayout/manage-coupons"
-                  className="flex items-center gap-2"
-                >
-                  🎟️ Manage Coupons
+                <Link to="/dashboardLayout/manage-coupons" className="flex items-center gap-2">
+                  <FaTicketAlt /> Manage Coupons
                 </Link>
               </>
             )}

@@ -1,4 +1,5 @@
 import React from "react";
+import AdminDashboard from "../../DashboardLayout/DashboardHome/AdminDashboard";
 
 const Statistics = () => {
   return (
@@ -18,7 +19,9 @@ const Statistics = () => {
           <h3 className="text-3xl">$4,560</h3>
         </div>
       </div>
+      <AdminDashboard></AdminDashboard>
     </div>
+    
   );
 };
 
