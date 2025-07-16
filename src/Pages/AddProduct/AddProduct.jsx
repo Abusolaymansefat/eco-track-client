@@ -1,35 +1,49 @@
-import { useForm } from "react-hook-form";
-import useAuth from "../../hooks/UseAuth";
-import useAxios from "../../hooks/useAxios";
+// import { useForm } from "react-hook-form";
+// import useAxios from "../../hooks/useAxios";
+// import { useEffect, useState } from "react";
+// import { imageUpload } from "../../api/utils";
+// import { toast } from "react-toastify";
+// import useAuth from "../../hooks/useAuth";
+
 import { useEffect, useState } from "react";
-import { imageUpload } from "../../api/utils";
+import useAuth from "../../hooks/useAuth";
+import useAxios from "../../hooks/useAxios";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import { imageUpload } from "../../api/utils";
 
 const AddProduct = () => {
   const axiosSecure = useAxios();
   const { user } = useAuth();
-  const navigate = useNavigate();
 
-  const { register, handleSubmit, reset } = useForm();
-
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [userProductCount, setUserProductCount] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [imageURL, setImageURL] = useState("");
-  const [userProductCount, setUserProductCount] = useState(0);
 
-  // ✅ Load how many products the user has
+  // সাবস্ক্রিপশন স্টেট লোড করো
+  useEffect(() => {
+    if (user?.email) {
+      axiosSecure
+        .get(`/user/${user.email}`)
+        .then((res) => setIsSubscribed(res.data.isSubscribed || false))
+        .catch(() => setIsSubscribed(false));
+    }
+  }, [user?.email, axiosSecure]);
+
+  // ইউজারের প্রোডাক্ট সংখ্যা লোড করো
   useEffect(() => {
     if (user?.email) {
       axiosSecure
         .get(`/products?ownerEmail=${user.email}`)
-        .then((res) => {
-          setUserProductCount(res.data.total || 0);
-        })
+        .then((res) => setUserProductCount(res.data.total || 0))
         .catch(() => {
           toast.error("Failed to load your product data");
         });
     }
-  }, [user, axiosSecure]);
+  }, [user?.email, axiosSecure]);
+
+  const { register, handleSubmit, reset } = useForm();
 
   const handleImageChange = async (e) => {
     const file = e.target.files[0];
@@ -48,9 +62,11 @@ const AddProduct = () => {
   };
 
   const onSubmit = async (data) => {
-    // ❌ Free user limit check
-    if (!user?.isSubscribed && userProductCount >= 1) {
-      toast.error("Free users can only add one product. Upgrade for more.");
+   
+    if (!isSubscribed && userProductCount >= 1) {
+      toast.error(
+        "Free users can only add one product. Please subscribe for more."
+      );
       return;
     }
 
@@ -79,7 +95,7 @@ const AddProduct = () => {
         toast.success("✅ Product Added!");
         reset();
         setImageURL("");
-        navigate("/add-product");
+        setUserProductCount((count) => count + 1); 
       }
     } catch (err) {
       toast.error("❌ Failed to add product", err);
@@ -111,6 +127,7 @@ const AddProduct = () => {
         {uploading && (
           <p className="text-sm text-blue-500">Uploading image...</p>
         )}
+
         {imageURL && (
           <img src={imageURL} alt="Uploaded" className="w-32 mt-2" />
         )}

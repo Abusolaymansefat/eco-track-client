@@ -1,10 +1,9 @@
 import { Link, useNavigate } from "react-router";
+import useAuth from "../../../hooks/useAuth";
+import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
-import useAxios from "../../../hooks/useAxios";
-import useAuth from "../../../hooks/UseAuth";
-
 
 const FeaturedProducts = () => {
   const axiosSecure = useAxios();
@@ -12,15 +11,16 @@ const FeaturedProducts = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  // Fetch featured products
   const { data: featuredProducts = [], isLoading } = useQuery({
-  queryKey: ["featuredProducts"],
-  queryFn: async () => {
-     console.log('data....')
-    const res = await axiosSecure.get("/products/featured");
-    return res.data;
-  },
-});
+    queryKey: ["featuredProducts"],
+    queryFn: async () => {
+      const res = await axiosSecure.get("/products/featured");
+      return res.data;
+    },
+  });
 
+  // Handle upvote mutation
   const upvoteMutation = useMutation({
     mutationFn: async (id) => {
       return await axiosSecure.patch(`/products/upvote/${id}`, {
@@ -28,18 +28,29 @@ const FeaturedProducts = () => {
       });
     },
     onSuccess: () => {
-      toast.success("Upvoted!");
+      toast.success("Upvoted successfully!");
       queryClient.invalidateQueries(["featuredProducts"]);
     },
-    onError: () => toast.error("Already voted or failed!"),
+    onError: () => {
+      toast.error("Upvote failed or already voted.");
+    },
   });
 
   const handleUpvote = (product) => {
     if (!user) return navigate("/login");
-    if (product.voters?.includes(user.email)) {
+
+    const alreadyVoted = product.voters?.includes(user.email);
+    const isOwner = user.email === product.ownerEmail;
+
+    if (alreadyVoted) {
       toast.error("You already voted!");
       return;
     }
+    if (isOwner) {
+      toast.error("You can't vote on your own product");
+      return;
+    }
+
     upvoteMutation.mutate(product._id);
   };
 
@@ -47,20 +58,24 @@ const FeaturedProducts = () => {
 
   return (
     <section className="my-10 px-4 max-w-7xl mx-auto bg-gradient-to-br py-10 rounded-lg shadow">
-      <h2 className="text-3xl font-bold text-center mb-10"> Featured Products</h2>
+      <h2 className="text-3xl font-bold text-center mb-10 text-gray-800">
+        Featured Products
+      </h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {featuredProducts.slice(0, 6).map((product) => {
           const alreadyVoted = product.voters?.includes(user?.email);
           const isOwner = user?.email === product.ownerEmail;
 
-          // Convert tags string to array if needed
           const tagsArray = Array.isArray(product.tags)
             ? product.tags
             : product.tags?.split(",") || [];
 
           return (
-            <div key={product._id} className="border p-4 rounded-lg shadow-md">
+            <div
+              key={product._id}
+              className="border p-4 rounded-lg shadow-md "
+            >
               <img
                 src={product.image}
                 alt={product.name}
@@ -75,7 +90,10 @@ const FeaturedProducts = () => {
 
               <div className="flex flex-wrap gap-2 my-2">
                 {tagsArray.map((tag, idx) => (
-                  <span key={idx} className="text-xs px-2 py-1 rounded-full bg-[#9dcece]">
+                  <span
+                    key={idx}
+                    className="text-xs px-2 py-1 rounded-full  text-blue-800"
+                  >
                     {tag.trim()}
                   </span>
                 ))}
@@ -105,7 +123,9 @@ const FeaturedProducts = () => {
 
       <div className="text-center mt-10">
         <Link to="/products">
-          <button className="btn btn-outline btn-primary">Show All Products</button>
+          <button className="btn btn-outline btn-primary">
+            Show All Products
+          </button>
         </Link>
       </div>
     </section>

@@ -6,17 +6,18 @@ const useAdmin = () => {
   const { user } = useAuth();
   const axiosSecure = useAxios();
 
-  const { data: isAdmin, isLoading } = useQuery({
-    queryKey: ["isAdmin", user?.email],
+  const { data: role, isLoading } = useQuery({
+    queryKey: ["role", user?.email],
     queryFn: async () => {
-      if (!user?.email) return false;
-      const res = await axiosSecure.get(`/users/admin/${user.email}`);
-      return res.data.isAdmin;
+      if (!user?.email) return null;
+      const res = await axiosSecure.get(`/users/role/${user.email}`);
+      return res.data.role; // এখানে নিশ্চিত হও role ঠিকভাবে আসছে
     },
-    enabled: !!user?.email, 
+    enabled: !!user?.email,
   });
 
-  return [isAdmin, isLoading];
+  return [role, isLoading];
 };
+
 
 export default useAdmin;

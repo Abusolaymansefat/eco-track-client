@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import useAuth from "../../../hooks/UseAuth";
+import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
@@ -40,9 +40,15 @@ const MyProfile = () => {
         alt={user?.displayName}
         className="w-24 h-24 rounded-full mx-auto mb-4"
       />
-      <p><strong>Name:</strong> {user?.displayName}</p>
-      <p><strong>Email:</strong> {user?.email}</p>
-      <p><strong>Role:</strong> {userData?.role || "user"}</p>
+      <p>
+        <strong>Name:</strong> {user?.displayName}
+      </p>
+      <p>
+        <strong>Email:</strong> {user?.email}
+      </p>
+      <p>
+        <strong>Role:</strong> {userData?.role || "user"}
+      </p>
 
       <button
         onClick={handleSubscribe}
@@ -70,4 +76,3 @@ const MyProfile = () => {
 };
 
 export default MyProfile;
-

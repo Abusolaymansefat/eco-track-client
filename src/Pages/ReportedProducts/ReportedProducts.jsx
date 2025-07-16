@@ -14,31 +14,49 @@ const ReportedProducts = () => {
     });
   }, [axiosSecure]);
 
-  const handleDelete = async (id) => {
-    await axiosSecure.delete(`/products/${id}`);
-    toast.success("Product deleted successfully");
-    setReported(reported.filter((r) => r._id !== id));
+  const handleDelete = async (productId) => {
+    try {
+      await axiosSecure.delete(`/products/${productId}`);
+      toast.success("Product deleted successfully");
+      setReported(reported.filter((r) => r.productId !== productId));
+    } catch (err) {
+      toast.error("Failed to delete product", err);
+    }
   };
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">🚨 Reported Products</h2>
+      <h2 className="text-2xl font-bold mb-4">
+       Reported Products ({reported.length})
+      </h2>
       <table className="table table-zebra w-full">
         <thead>
           <tr>
+            <th>#</th>
             <th>Product Name</th>
             <th>Reporter Email</th>
             <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-          {reported.map((r) => (
-            <tr key={r._id}>
-              <td>{r.name}</td>
+          {reported.map((r, index) => (
+            <tr key={r.productId}>
+              <td>{index + 1}</td>
+              <td>{r.productName}</td>
               <td>{r.reporterEmail}</td>
               <td className="space-x-2">
-                <button onClick={() => navigate(`/product/${r._id}`)} className="btn btn-sm btn-info">View</button>
-                <button onClick={() => handleDelete(r._id)} className="btn btn-sm btn-error">Delete</button>
+                <button
+                  onClick={() => navigate(`/product/${r.productId}`)}
+                  className="btn btn-sm btn-info"
+                >
+                  View
+                </button>
+                <button
+                  onClick={() => handleDelete(r.productId)}
+                  className="btn btn-sm btn-error"
+                >
+                  Delete
+                </button>
               </td>
             </tr>
           ))}
