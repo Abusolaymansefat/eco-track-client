@@ -23,6 +23,7 @@ import AdminRoute from "../Pages/shared/AdminRoute/AdminRoute";
 import MyProducts from "../Pages/shared/MyProducts/MyProducts";
 import UpdateProduct from "../Pages/shared/UpdateProduct/UpdateProduct";
 import Forbidden from "../Pages/shared/Forbidden/Forbidden";
+import MembershipDashboards from "../Pages/DashboardLayout/DashboardHome/MembershipDashboards";
 
 export const router = createBrowserRouter([
   {
@@ -79,8 +80,8 @@ export const router = createBrowserRouter([
             element: <UpdateProduct />,
           },
           {
-            path: "/membership",
-            element: <MembershipDashboarb></MembershipDashboarb>,
+            path: "/dashboardLayout/membership",
+            element: <MembershipDashboards></MembershipDashboards>
           },
           {
             path: "payment",

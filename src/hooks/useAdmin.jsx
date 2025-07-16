@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import useAuth from "./UseAuth";
 import useAxios from "./useAxios";
+import useAuth from "./useAuth";
 
 const useAdmin = () => {
   const { user } = useAuth();
@@ -10,14 +10,19 @@ const useAdmin = () => {
     queryKey: ["role", user?.email],
     queryFn: async () => {
       if (!user?.email) return null;
-      const res = await axiosSecure.get(`/users/role/${user.email}`);
-      return res.data.role; // এখানে নিশ্চিত হও role ঠিকভাবে আসছে
+      try {
+        const res = await axiosSecure.get(`/users/role/${user.email}`);
+        return res.data.role; 
+      } catch (error) {
+        console.error("Error fetching role:", error);
+        
+        return "user";
+      }
     },
     enabled: !!user?.email,
   });
 
   return [role, isLoading];
 };
-
 
 export default useAdmin;

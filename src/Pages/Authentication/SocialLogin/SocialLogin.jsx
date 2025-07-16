@@ -27,7 +27,7 @@ const SocialLogin = () => {
         isSubscribed: false,
       };
 
-      const res = await fetch("http://localhost:3000/users", {
+      const res = await fetch("https://app-orbit-server-eight.vercel.app/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,7 +55,7 @@ const SocialLogin = () => {
   return (
     <button
       onClick={handleGoogleLogin}
-      className="flex items-center justify-center gap-2 bg-white border text-black font-semibold py-2 px-4 rounded w-full mt-4 shadow hover:shadow-md transition"
+      className="flex items-center justify-center gap-2  border bg-white text-black font-semibold py-2 px-4 rounded w-full mt-4 shadow hover:shadow-md transition"
     >
       <FcGoogle className="text-2xl" />
       Continue with Google

@@ -72,9 +72,7 @@ const DashboardLayout = () => {
                 <Link to="/dashboardLayout/product-ReviewQueue" className="flex items-center gap-2">
                   <FaCheckCircle /> Product Review Queue
                 </Link>
-                <Link to="/dashboardLayout/reported-Products" className="flex items-center gap-2">
-                  <FaExclamationCircle /> Reported Products
-                </Link>
+                
               </>
             )}
 

@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MembershipDashboard = () => {
+const MembershipDashboards = () => {
     return (
         <div>
              <h2 className='text-3xl'>Membership Dashboard</h2>
@@ -8,4 +8,4 @@ const MembershipDashboard = () => {
     );
 };
 
-export default MembershipDashboard;
+export default MembershipDashboards;
