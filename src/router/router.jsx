@@ -23,7 +23,6 @@ import AdminRoute from "../Pages/shared/AdminRoute/AdminRoute";
 import MyProducts from "../Pages/shared/MyProducts/MyProducts";
 import UpdateProduct from "../Pages/shared/UpdateProduct/UpdateProduct";
 import Forbidden from "../Pages/shared/Forbidden/Forbidden";
- 
 
 export const router = createBrowserRouter([
   {
@@ -40,13 +39,13 @@ export const router = createBrowserRouter([
       },
       {
         path: "/products",
-        element: <AllProducts />
+        element: <AllProducts />,
         // element: <PrivateRoute><AllProducts /></PrivateRoute>,
       },
       {
-        path: 'forbidden',
-        element: <Forbidden></Forbidden>
-      }
+        path: "forbidden",
+        element: <Forbidden></Forbidden>,
+      },
     ],
   },
   {
@@ -77,8 +76,11 @@ export const router = createBrowserRouter([
           { path: "my-Products", element: <MyProducts></MyProducts> },
           {
             path: "update-product/:id",
-            element: <UpdateProduct />
-            
+            element: <UpdateProduct />,
+          },
+          {
+            path: "/membership",
+            element: <MembershipDashboarb></MembershipDashboarb>,
           },
           {
             path: "payment",
@@ -97,6 +99,7 @@ export const router = createBrowserRouter([
             path: "product-ReviewQueue",
             element: <ProductReviewQueue></ProductReviewQueue>,
           },
+
           {
             path: "statistics",
             element: (

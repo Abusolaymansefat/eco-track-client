@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router";
 import Navbar from "../Pages/shared/Navbar/Navbar";
 import Footer from "../Pages/shared/Footer/Footer";
 import useAxios from "../hooks/useAxios";
-import useAuth from "../hooks/useAuth";
+// import useAuth from "../hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import {
   FaCheckCircle,
@@ -16,6 +16,7 @@ import {
   FaUsers,
   FaTicketAlt,
 } from "react-icons/fa";
+import useAuth from "../hooks/UseAuth";
 
 const DashboardLayout = () => {
   const { user } = useAuth();
