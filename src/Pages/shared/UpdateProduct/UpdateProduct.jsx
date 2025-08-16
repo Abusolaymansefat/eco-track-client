@@ -34,7 +34,7 @@ const UpdateProduct = () => {
       toast.success("✅ Product updated successfully!");
       navigate("/dashboardLayout/my-products");
     } catch (err) {
-      toast.error("Failed to update product.");
+      toast.error("Failed to update product.", err);
     }
   };
 

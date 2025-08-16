@@ -87,7 +87,7 @@ const Navbar = () => {
           <FaTachometerAlt /> Dashboard
         </NavLink>
       </li>
-      <li>
+      {/* <li>
         <NavLink
           to="/profile"
           onClick={handleLinkClick}
@@ -95,7 +95,7 @@ const Navbar = () => {
         >
           <FaUser /> Profile
         </NavLink>
-      </li>
+      </li> */}
     </>
   );
 

@@ -68,10 +68,10 @@ const TrendingProducts = () => {
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center justify-center gap-2 text-gray-900 dark:text-white">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center justify-center gap-2 text-[#087ad8] ">
             <FaFire className="text-red-500" /> Trending Products
           </h2>
-          <p className="text-gray-700 dark:text-gray-300">
+          <p className="text-gray-700 dark:text-gray-700">
             Discover the most upvoted tech products in our community!
           </p>
         </div>
@@ -93,7 +93,7 @@ const TrendingProducts = () => {
 
               <Link
                 to={`/products/${product._id}`}
-                className="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline block mt-3"
+               className="text-lg sm:text-xl font-semibold text-[#64a6e7] dark:text-[#0d5eaf] hover:underline mt-2"
               >
                 {product.name}
               </Link>
@@ -105,7 +105,7 @@ const TrendingProducts = () => {
                 ).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="inline-block text-xs px-2 py-1 rounded-full mr-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
+                    className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                   >
                     {tag.trim()}
                   </span>
@@ -113,14 +113,14 @@ const TrendingProducts = () => {
               </p>
 
               <button
-                className="btn btn-sm mt-3 flex items-center gap-1 text-white bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-gray-400 disabled:dark:bg-gray-600 transition-colors"
+                className="btn btn-sm mt-3 flex items-center gap-1 text-[#2a8cf5] bg-[#315e8f] dark:bg-[#2a619c] hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-gray-400 disabled:dark:bg-gray-600 transition-colors"
                 onClick={() => handleUpvote(product)}
                 disabled={
                   user?.email === product.ownerEmail ||
                   product.voters?.includes(user?.email)
                 }
               >
-                <FaThumbsUp size={12} /> {product.upvotes}
+                <FaThumbsUp size={24} /> {product.upvotes}
               </button>
             </div>
           ))}

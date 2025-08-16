@@ -128,7 +128,7 @@ const AllProducts = () => {
             return (
               <div
                 key={product._id}
-                className="p-4 rounded-lg shadow-md hover:shadow-lg transition bg-white dark:bg-gray-800"
+                className="p-4 rounded-lg shadow-md hover:shadow-lg transition bg-white "
               >
                 <img
                   src={product.image}
@@ -136,7 +136,7 @@ const AllProducts = () => {
                   className="w-full h-40 sm:h-48 md:h-52 object-cover rounded"
                 />
                 <Link to={`/products/${product._id}`}>
-                  <h3 className="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-300 hover:underline mt-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-[#4876a3] dark:text-[#0d5eaf] hover:underline mt-2">
                     {product.name}
                   </h3>
                 </Link>
