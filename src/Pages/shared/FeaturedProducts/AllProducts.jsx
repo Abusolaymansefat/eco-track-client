@@ -13,6 +13,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
+import Loading from "../../DashboardLayout/DashboardHome/Loading";
 
 const AllProducts = () => {
   const axiosSecure = useAxios();
@@ -84,7 +85,9 @@ const AllProducts = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl font-bold text-center mb-6">🛍️ All Products</h2>
+      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 text-[#1fc2eb]">
+        🛍️ All Products
+      </h2>
 
       {/* Search Input */}
       <div className="max-w-md mx-auto mb-8">
@@ -98,7 +101,11 @@ const AllProducts = () => {
       </div>
 
       {/* Loading/Error/No products */}
-      {isLoading && <p className="text-center text-blue-500">Loading...</p>}
+      {isLoading && (
+        <p className="text-center text-blue-500">
+          <Loading />
+        </p>
+      )}
       {isError && (
         <p className="text-center text-red-500">
           Failed to load products: {error.message}
@@ -110,7 +117,7 @@ const AllProducts = () => {
 
       {/* Products Grid */}
       {!isLoading && !isError && products.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
           {products.map((product) => {
             const alreadyVoted = product.voters?.includes(user?.email);
             const isOwner = user?.email === product.ownerEmail;
@@ -121,15 +128,15 @@ const AllProducts = () => {
             return (
               <div
                 key={product._id}
-                className="border p-4 rounded-lg shadow-md hover:shadow-lg transition"
+                className="p-4 rounded-lg shadow-md hover:shadow-lg transition bg-white dark:bg-gray-800"
               >
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="w-full h-40 object-cover rounded"
+                  className="w-full h-40 sm:h-48 md:h-52 object-cover rounded"
                 />
                 <Link to={`/products/${product._id}`}>
-                  <h3 className="text-xl font-semibold text-blue-600 hover:underline mt-2">
+                  <h3 className="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-300 hover:underline mt-2">
                     {product.name}
                   </h3>
                 </Link>
@@ -138,7 +145,7 @@ const AllProducts = () => {
                   {tagsArray.map((tag, idx) => (
                     <span
                       key={idx}
-                      className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800"
+                      className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                     >
                       {tag.trim()}
                     </span>
@@ -152,7 +159,7 @@ const AllProducts = () => {
                     isOwner || alreadyVoted ? "btn-disabled" : "btn-primary"
                   }`}
                 >
-                  <FaThumbsUp /> {product.upvotes}
+                  <FaThumbsUp size={12} /> {product.upvotes}
                 </button>
 
                 {(isOwner || alreadyVoted) && (
@@ -169,7 +176,7 @@ const AllProducts = () => {
       )}
 
       {/* Pagination Controls */}
-      <div className="flex justify-center mt-10 gap-4">
+      <div className="flex flex-col sm:flex-row justify-center items-center mt-10 gap-4">
         <button
           onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
           disabled={page === 1}

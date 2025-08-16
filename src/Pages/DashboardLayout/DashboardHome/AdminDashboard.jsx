@@ -25,7 +25,8 @@ const AdminDashboard = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center text-[#3e28bb] py-10"><Loading/></div>;
+    return <div className="text-center text-[#3e28bb] py-10"><Loading/>
+    </div>;
   }
 
   const pieData = [

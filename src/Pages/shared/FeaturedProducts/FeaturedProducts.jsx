@@ -1,16 +1,19 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { FaThumbsUp } from "react-icons/fa";
+import { CircleLoader } from "react-spinners";
+import Loading from "../../DashboardLayout/DashboardHome/Loading";
 
 const FeaturedProducts = () => {
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const [loadingAll, setLoadingAll] = useState(false); // ✅ loader state
 
   // Fetch featured products
   const {
@@ -42,7 +45,6 @@ const FeaturedProducts = () => {
     },
   });
 
-  // Upvote handler
   const handleUpvote = (product) => {
     if (!user) return navigate("/login");
 
@@ -61,7 +63,12 @@ const FeaturedProducts = () => {
     upvoteMutation.mutate(product._id);
   };
 
-  if (isLoading) return <p className="text-center py-10">Loading...</p>;
+  if (isLoading)
+    return (
+      <p className="text-center py-10">
+        <Loading />
+      </p>
+    );
 
   if (isError)
     return (
@@ -88,7 +95,7 @@ const FeaturedProducts = () => {
           return (
             <div
               key={product._id}
-              className="border p-4 rounded-lg shadow-md  group relative"
+              className="p-4 rounded-lg shadow-md group relative"
             >
               <img
                 src={product.image}
@@ -97,35 +104,32 @@ const FeaturedProducts = () => {
               />
 
               <Link to={`/products/${product._id}`}>
-                <h3 className="text-xl font-semibold text-blue-600 hover:underline mt-2">
+                <h3 className="text-lg sm:text-xl font-semibold text-[#64a6e7] dark:text-[#0d5eaf] hover:underline mt-2">
                   {product.name}
                 </h3>
               </Link>
 
-              {/* Tags */}
               <div className="flex flex-wrap gap-2 my-2">
                 {tagsArray.map((tag, idx) => (
                   <span
                     key={idx}
-                    className="text-xs px-2 py-1 rounded-full  text-blue-800"
+                    className="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                   >
                     {tag.trim()}
                   </span>
                 ))}
               </div>
 
-              {/* Upvote Button */}
               <button
                 onClick={() => handleUpvote(product)}
                 disabled={isOwner || alreadyVoted || upvoteMutation.isLoading}
-                className={`btn btn-sm mt-3 flex items-center gap-2 ${
-                  isOwner || alreadyVoted ? "btn-disabled" : "btn-primary"
+                className={`mt-3 flex items-center gap-2 ${
+                  isOwner || alreadyVoted ? "text-[#2a8cf5]" : "text-[#087ad8]"
                 }`}
               >
-                <FaThumbsUp /> {product.upvotes || 0}
+                <FaThumbsUp size={24} /> {product.upvotes || 0}
               </button>
 
-              {/* Hover warning message */}
               {(isOwner || alreadyVoted) && (
                 <p className="text-xs text-red-500 opacity-0 group-hover:opacity-100 transition duration-300 absolute bottom-3 left-4 bg-white px-2 py-1 rounded shadow text-[11px]">
                   {isOwner
@@ -140,8 +144,15 @@ const FeaturedProducts = () => {
 
       <div className="text-center mt-10">
         <Link to="/products">
-          <button className="btn btn-outline btn-primary">
-            Show All Products
+          <button
+            onClick={() => setLoadingAll(true)} 
+            className="btn btn-outline bg-[#64a6e7] hover:bg-[#1e568d] flex items-center justify-center gap-2 mx-auto"
+          >
+            {loadingAll ? (
+              <CircleLoader size={16} color="#1fc2eb" />
+            ) : (
+              "Show All Products"
+            )}
           </button>
         </Link>
       </div>

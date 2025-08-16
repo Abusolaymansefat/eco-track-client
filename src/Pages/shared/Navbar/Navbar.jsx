@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { NavLink } from "react-router";
 import {
   FaMoon,
@@ -17,6 +17,7 @@ import { AuthContext } from "../../../Context/AuthContext/AuthContext";
 
 const Navbar = () => {
   const { user, logout } = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
 
   const handleLogOut = () => {
     logout()
@@ -29,15 +30,28 @@ const Navbar = () => {
       });
   };
 
+  const handleLinkClick = () => {
+    // mobile menu বন্ধ করবে
+    setIsOpen(false);
+  };
+
   const loggedOutLinks = (
     <>
       <li>
-        <NavLink to="/" className="flex items-center gap-2">
+        <NavLink
+          to="/"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaHome /> Home
         </NavLink>
       </li>
       <li>
-        <NavLink to="/products" className="flex items-center gap-2">
+        <NavLink
+          to="/products"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaBoxOpen /> Products
         </NavLink>
       </li>
@@ -47,22 +61,38 @@ const Navbar = () => {
   const loggedInLinks = (
     <>
       <li>
-        <NavLink to="/" className="flex items-center gap-2">
+        <NavLink
+          to="/"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaHome /> Home
         </NavLink>
       </li>
       <li>
-        <NavLink to="/products" className="flex items-center gap-2">
+        <NavLink
+          to="/products"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaBoxOpen /> Products
         </NavLink>
       </li>
       <li>
-        <NavLink to="/dashboardLayout" className="flex items-center gap-2">
+        <NavLink
+          to="/dashboardLayout"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaTachometerAlt /> Dashboard
         </NavLink>
       </li>
       <li>
-        <NavLink to="/profile" className="flex items-center gap-2">
+        <NavLink
+          to="/profile"
+          onClick={handleLinkClick}
+          className="flex items-center gap-2"
+        >
           <FaUser /> Profile
         </NavLink>
       </li>
@@ -70,12 +100,15 @@ const Navbar = () => {
   );
 
   return (
-    <div className="bg-gray-100 dark:bg-gray-900 dark:text-white text-black fixed top-0 left-0 w-full z-50 shadow transition-colors duration-300">
+    <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 fixed top-0 left-0 w-full z-50 shadow transition-colors duration-300">
       <div className="navbar container mx-auto px-4">
         <div className="navbar-start">
           {/* Mobile Dropdown */}
           <div className="dropdown">
-            <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="btn btn-ghost lg:hidden"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -90,13 +123,12 @@ const Navbar = () => {
                   d="M4 6h16M4 12h8m-8 6h16"
                 />
               </svg>
-            </div>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-10 mt-3 w-52 p-2 shadow"
-            >
-              {user ? loggedInLinks : loggedOutLinks}
-            </ul>
+            </button>
+            {isOpen && (
+              <ul className="menu menu-sm dropdown-content bg-base-100 text-black rounded-box z-10 mt-3 w-52 p-2 shadow">
+                {user ? loggedInLinks : loggedOutLinks}
+              </ul>
+            )}
           </div>
 
           {/* Logo */}
@@ -150,12 +182,14 @@ const Navbar = () => {
               <NavLink
                 className="btn btn-sm flex items-center gap-1"
                 to="/register"
+                onClick={handleLinkClick}
               >
                 <FaUserPlus /> Register
               </NavLink>
               <NavLink
                 className="btn btn-sm flex items-center gap-1"
                 to="/login"
+                onClick={handleLinkClick}
               >
                 <FaSignInAlt /> Login
               </NavLink>

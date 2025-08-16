@@ -4,9 +4,11 @@ import { FaFire, FaThumbsUp } from "react-icons/fa";
 import { toast } from "react-toastify";
 import useAxios from "../../hooks/useAxios";
 import useAuth from "../../hooks/useAuth";
+import { CircleLoader } from "react-spinners";
 
 const TrendingProducts = () => {
   const [products, setProducts] = useState([]);
+  const [loadingAll, setLoadingAll] = useState(false);
   const axiosSecure = useAxios();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -44,7 +46,6 @@ const TrendingProducts = () => {
 
       if (res.data.modifiedCount > 0) {
         toast.success("Thanks for your vote!");
-
         const updatedProducts = products.map((p) =>
           p._id === product._id
             ? {
@@ -63,46 +64,48 @@ const TrendingProducts = () => {
   };
 
   return (
-    <section className="py-16">
+    <section className="py-16 bg-gray-50  transition-colors">
       <div className="max-w-7xl mx-auto px-4">
+        {/* Heading */}
         <div className="text-center mb-10">
-          <h2 className="text-3xl font-bold mb-2 flex items-center justify-center gap-2">
+          <h2 className="text-3xl sm:text-4xl font-bold mb-2 flex items-center justify-center gap-2 text-gray-900 dark:text-white">
             <FaFire className="text-red-500" /> Trending Products
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-700 dark:text-gray-300">
             Discover the most upvoted tech products in our community!
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        {/* Products Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {products.map((product) => (
             <div
               key={product._id}
-              className="border rounded-lg p-4 shadow hover:shadow-md transition"
+              className=" rounded-lg p-4 shadow hover:shadow-lg transition bg-white"
             >
               <div className="overflow-hidden rounded">
                 <img
                   src={product.image}
                   alt={product.name}
-                  className="h-40 w-full object-cover transform hover:scale-105 transition duration-300"
+                  className="h-40 sm:h-48 w-full object-cover transform hover:scale-105 transition duration-300"
                 />
               </div>
 
               <Link
                 to={`/products/${product._id}`}
-                className="text-xl font-semibold text-blue-600 hover:underline block mt-3"
+                className="text-lg sm:text-xl font-semibold text-blue-600 dark:text-blue-400 hover:underline block mt-3"
               >
                 {product.name}
               </Link>
 
-              <p className="mt-2 text-sm text-gray-700">
+              <p className="mt-2 text-sm text-gray-700 dark:text-gray-300">
                 {(Array.isArray(product.tags)
                   ? product.tags
                   : product.tags?.split(",") || []
                 ).map((tag, idx) => (
                   <span
                     key={idx}
-                    className="inline-block text-xs px-2 py-1 rounded-full mr-1 bg-gray-200"
+                    className="inline-block text-xs px-2 py-1 rounded-full mr-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200"
                   >
                     {tag.trim()}
                   </span>
@@ -110,23 +113,32 @@ const TrendingProducts = () => {
               </p>
 
               <button
-                className="btn btn-sm mt-3 flex items-center gap-1"
+                className="btn btn-sm mt-3 flex items-center gap-1 text-white bg-blue-600 dark:bg-blue-500 hover:bg-blue-700 dark:hover:bg-blue-600 disabled:bg-gray-400 disabled:dark:bg-gray-600 transition-colors"
                 onClick={() => handleUpvote(product)}
                 disabled={
                   user?.email === product.ownerEmail ||
                   product.voters?.includes(user?.email)
                 }
               >
-                <FaThumbsUp />
-                {product.upvotes}
+                <FaThumbsUp size={12} /> {product.upvotes}
               </button>
             </div>
           ))}
         </div>
 
+        {/* Show All Products Button */}
         <div className="text-center mt-10">
-          <Link to="/products" className="btn btn-outline btn-primary">
-            Show All Products
+          <Link to="/products">
+            <button
+              onClick={() => setLoadingAll(true)}
+              className="btn btn-outline  bg-[#64a6e7] hover:bg-[#1e568d] dark:bg-[#0559ad] text-white flex items-center justify-center gap-2 mx-auto"
+            >
+              {loadingAll ? (
+                <CircleLoader size={16} color="#ffffff" />
+              ) : (
+                "Show All Products"
+              )}
+            </button>
           </Link>
         </div>
       </div>

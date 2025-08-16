@@ -1,34 +1,34 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
+// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import bannerimg1 from "../../../assets/banner/photo-1.avif";
 import bannerimg2 from "../../../assets/banner/photo-2.avif";
 import bannerimg3 from "../../../assets/banner/photo-3.avif";
 
-
-
 const Banner = () => {
   return (
-    <div className="max-w-7xl mx-auto mt-5">
+    <div className="max-w-full mx-auto mt-5">
       <Carousel
         showThumbs={false}
         autoPlay
         infiniteLoop
         interval={4000}
         showStatus={false}
-        transitionTime={400}
-        fadeInUp
+        transitionTime={600}
+        swipeable
+        emulateTouch
       >
         {/* Slide 1 */}
         <div className="relative">
           <img
             src={bannerimg1}
             alt="Slide 1"
-            className="object-cover w-full h-[500px]"
+            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
           />
-          <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white p-5 text-center">
+          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
             <motion.h2
-              className="text-3xl md:text-5xl font-bold mb-3"
+              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
               initial={{ opacity: 0, y: 30 }}
               animate={{
                 opacity: 1,
@@ -44,7 +44,7 @@ const Banner = () => {
             >
               Discover the Future
             </motion.h2>
-            <p className="text-lg md:text-xl max-w-xl">
+            <p className="text-sm text-white sm:text-lg md:text-xl max-w-xl">
               Explore and upvote the latest web apps, AI tools, and digital
               products.
             </p>
@@ -56,11 +56,11 @@ const Banner = () => {
           <img
             src={bannerimg2}
             alt="Slide 2"
-            className="object-cover w-full h-[500px]"
+            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
           />
-          <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white p-5 text-center">
+          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
             <motion.h2
-              className="text-3xl md:text-5xl font-bold mb-3"
+              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
               initial={{ opacity: 0, y: 30 }}
               animate={{
                 opacity: 1,
@@ -76,7 +76,7 @@ const Banner = () => {
             >
               Build & Share
             </motion.h2>
-            <p className="text-lg md:text-xl max-w-xl">
+            <p className="text-sm text-white sm:text-lg md:text-xl max-w-xl">
               Submit your own tech product and get discovered by the world.
             </p>
           </div>
@@ -87,11 +87,11 @@ const Banner = () => {
           <img
             src={bannerimg3}
             alt="Slide 3"
-            className="object-cover w-full h-[500px]"
+            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
           />
-          <div className="absolute inset-0 bg-black/50 flex flex-col justify-center items-center text-white p-5 text-center">
+          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
             <motion.h2
-              className="text-3xl md:text-5xl font-bold mb-3"
+              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
               initial={{ opacity: 0, y: 30 }}
               animate={{
                 opacity: 1,
@@ -107,7 +107,7 @@ const Banner = () => {
             >
               Join the Tech Community
             </motion.h2>
-            <p className="text-lg md:text-xl max-w-xl">
+            <p className="text-sm text-black sm:text-lg md:text-xl max-w-xl">
               Vote, review, and connect with fellow developers and creators.
             </p>
           </div>
