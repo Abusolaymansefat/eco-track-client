@@ -20,8 +20,6 @@ const AddProduct = () => {
   const [userProductCount, setUserProductCount] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [imageURL, setImageURL] = useState("");
-
-  // সাবস্ক্রিপশন স্টেট লোড করো
   useEffect(() => {
     if (user?.email) {
       axiosSecure
@@ -31,7 +29,6 @@ const AddProduct = () => {
     }
   }, [user?.email, axiosSecure]);
 
-  // ইউজারের প্রোডাক্ট সংখ্যা লোড করো
   useEffect(() => {
     if (user?.email) {
       axiosSecure

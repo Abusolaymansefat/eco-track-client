@@ -41,7 +41,6 @@ export const router = createBrowserRouter([
       {
         path: "/products",
         element: <AllProducts />,
-        // element: <PrivateRoute><AllProducts /></PrivateRoute>,
       },
       {
         path: "forbidden",

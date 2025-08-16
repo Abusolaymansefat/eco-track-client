@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import useAxios from "../../../hooks/useAxios";
+import Loading from "./Loading";
 
 const COLORS = ["#4ade80", "#fbbf24", "#60a5fa", "#0e659e", "#3e28bb", "#f87171"];
 
@@ -24,7 +25,7 @@ const AdminDashboard = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center text-[#3e28bb] py-10">Loading...</div>;
+    return <div className="text-center text-[#3e28bb] py-10"><Loading/></div>;
   }
 
   const pieData = [
