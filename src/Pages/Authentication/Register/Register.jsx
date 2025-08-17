@@ -20,18 +20,16 @@ const Register = () => {
   const onSubmit = async (data) => {
     setLoading(true);
     try {
-      // ১. ইউজার ফটো আপলোড
+
       const imageFile = data.photo[0];
       const imageURL = await imageUpload(imageFile);
 
-      // ২. Firebase Authentication দিয়ে ইউজার তৈরি
       const res = await createUser(data.email, data.password);
       console.log("Firebase user created:", res);
 
       // ৩. প্রোফাইল আপডেট (নাম + ফটো)
       await updateProfile(data.name, imageURL);
 
-      // ৪. MongoDB তে ইউজার সেভ করার জন্য POST API কল
       const userForDB = {
         name: data.name,
         email: data.email,
