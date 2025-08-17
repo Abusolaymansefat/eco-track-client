@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import useAxios from "../../hooks/useAxios";
 import { toast } from "react-toastify";
+import Loading from "../DashboardLayout/DashboardHome/Loading";
 
 const ProductReviewQueue = () => {
   const axiosSecure = useAxios();
@@ -41,7 +42,7 @@ const ProductReviewQueue = () => {
       </h2>
 
       {isLoading ? (
-        <p className="text-center text-blue-500">Loading...</p>
+        <p className="text-center text-blue-500"><Loading/></p>
       ) : pendingProducts.length === 0 ? (
         <p className="text-center text-green-600">No pending products ✅</p>
       ) : (

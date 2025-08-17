@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router";
-import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
+import useAuth from "../../../hooks/UseAuth";
 
 const MyProfile = () => {
   const { user } = useAuth();

@@ -40,7 +40,7 @@ const Register = () => {
         isSubscribed: false,
       };
 
-      const response = await fetch("http://localhost:3000//users", {
+      const response = await fetch("https://app-orbit-server-eight.vercel.app/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

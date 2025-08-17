@@ -69,7 +69,7 @@ const DashboardLayout = () => {
           <Link to="/">
             {" "}
            
-            <img src={home12Logo} alt="home" className="cursor-pointer mb-6" />
+            <img src={home12Logo} alt="home" className="cursor-pointer w-28 mb-6" />
           </Link>
           <nav className="flex flex-col space-y-3">
             <Link
