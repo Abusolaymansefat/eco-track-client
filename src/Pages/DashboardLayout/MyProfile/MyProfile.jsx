@@ -2,7 +2,6 @@ import { useNavigate } from "react-router";
 import useAxios from "../../../hooks/useAxios";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useState } from "react";
-import useAuth from "../../../hooks/UseAuth";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   FaCrown,
@@ -10,6 +9,7 @@ import {
   FaClock,
   FaCheckCircle,
 } from "react-icons/fa";
+import useAuth from "../../../hooks/useAuth";
 
 /* ---------- Helper ---------- */
 const calcProfileCompletion = ({ name, email, photo, subscribed }) => {

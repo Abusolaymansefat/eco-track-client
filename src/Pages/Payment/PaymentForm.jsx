@@ -1,10 +1,23 @@
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
+// PaymentForm.jsx
+import {
+  CardElement,
+  useElements,
+  useStripe,
+} from "@stripe/react-stripe-js";
 import { useState } from "react";
-import useAuth from "../../hooks/UseAuth";
 import useAxios from "../../hooks/useAxios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import {
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcAmex,
+  FaLock,
+  FaShieldAlt,
+} from "react-icons/fa";
+import { motion } from "framer-motion";
+import useAuth from "../../hooks/useAuth";
 
 const PaymentForm = () => {
   const stripe = useStripe();
@@ -19,17 +32,17 @@ const PaymentForm = () => {
   const [processing, setProcessing] = useState(false);
   const [error, setError] = useState("");
 
-  const baseAmount = 3000; // $30
-  const discountAmount = 500; // $5 off
+  const baseAmount = 3000;
+  const discountAmount = 500;
   const finalAmount = couponValid ? baseAmount - discountAmount : baseAmount;
 
   const handleApplyCoupon = () => {
-    if (coupon.trim().toLowerCase() === "discount5") {
+    if (coupon.toLowerCase() === "discount5") {
       setCouponValid(true);
-      toast.success("🎉 Coupon applied! You get $5 off.");
+      toast.success("🎉 Coupon Applied! $5 Discount");
     } else {
       setCouponValid(false);
-      toast.error("❌ Invalid coupon code.");
+      toast.error("❌ Invalid Coupon");
     }
   };
 
@@ -41,18 +54,15 @@ const PaymentForm = () => {
     setError("");
 
     try {
-      const res = await axiosSecure.post("/create-payment-intent", {
-        email: user.email,
+      const { data } = await axiosSecure.post("/create-payment-intent", {
         amount: finalAmount,
-        coupon: couponValid ? coupon : null,
+        email: user.email,
       });
 
-      const clientSecret = res.data.clientSecret;
       const card = elements.getElement(CardElement);
 
-      const { paymentIntent, error: stripeError } = await stripe.confirmCardPayment(
-        clientSecret,
-        {
+      const { paymentIntent, error } =
+        await stripe.confirmCardPayment(data.clientSecret, {
           payment_method: {
             card,
             billing_details: {
@@ -60,17 +70,15 @@ const PaymentForm = () => {
               email: user.email,
             },
           },
-        }
-      );
+        });
 
-      if (stripeError) {
-        setError(stripeError.message);
+      if (error) {
+        setError(error.message);
         setProcessing(false);
         return;
       }
 
       if (paymentIntent.status === "succeeded") {
-        // ✅ Save payment to DB
         await axiosSecure.post("/save-payment", {
           userEmail: user.email,
           amount: finalAmount,
@@ -79,72 +87,115 @@ const PaymentForm = () => {
           coupon: couponValid ? coupon : null,
         });
 
-        // ✅ Update role and membership
         await axiosSecure.patch(`/subscribe/${user.email}`, {
           isSubscribed: true,
-          role: "membership", // 🔥 Set role
+          role: "membership",
           coupon: couponValid ? coupon : null,
         });
 
-        // ✅ Refetch profile data
         await queryClient.invalidateQueries(["userProfile", user.email]);
 
-        toast.success("✅ Payment successful & membership activated!");
+        toast.success("✅ Membership Activated!");
         navigate("/dashboardLayout/profile");
       }
-    } catch (err) {
-      setError("❌ Payment failed. Please try again.", err);
+    } catch {
+      setError("Payment failed. Try again.");
     } finally {
       setProcessing(false);
     }
   };
 
   return (
-    <div className="min-h-[60vh] flex justify-center items-center">
-      <form
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 px-4">
+      <motion.form
+        initial={{ opacity: 0, y: 60 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
         onSubmit={handleSubmit}
-        className="p-6 rounded shadow-lg w-full max-w-md bg-[#76d48a]"
+        className="w-full max-w-md bg-white rounded-[32px] shadow-[0_25px_80px_rgba(0,0,0,0.25)] p-8"
       >
-        <h2 className="text-xl font-bold text-center mb-4">
-          Complete Payment: ${(finalAmount / 100).toFixed(2)}
+        <h2 className="text-3xl font-extrabold text-center mb-2">
+          Premium Membership
         </h2>
+        <p className="text-center text-gray-500 mb-6">
+          Secure & encrypted payment
+        </p>
 
-        {/* Coupon Input */}
+        {/* Card Icons */}
+        <div className="flex justify-center gap-6 text-5xl mb-6">
+          <FaCcVisa className="text-[#1a1f71]" />
+          <FaCcMastercard className="text-[#eb001b]" />
+          <FaCcAmex className="text-[#2e77bb]" />
+        </div>
+
+        {/* Price Box */}
+        <div className="bg-indigo-50 rounded-2xl p-4 mb-5 text-center">
+          <p className="text-sm text-gray-500">Total Payable</p>
+          <p className="text-4xl font-extrabold text-indigo-600">
+            ${(finalAmount / 100).toFixed(2)}
+          </p>
+          {couponValid && (
+            <p className="text-green-600 text-sm font-semibold mt-1">
+              🎉 Coupon Applied
+            </p>
+          )}
+        </div>
+
+        {/* Coupon */}
         <div className="flex gap-2 mb-4">
           <input
             type="text"
-            placeholder="Coupon code (optional)"
+            placeholder="Coupon code"
             value={coupon}
             onChange={(e) => setCoupon(e.target.value)}
-            className="input input-bordered flex-grow"
-            disabled={processing}
+            className="input input-bordered flex-1 font-semibold"
           />
           <button
             type="button"
             onClick={handleApplyCoupon}
-            className="btn btn-secondary"
-            disabled={processing}
+            className="btn btn-secondary font-bold"
           >
             Apply
           </button>
         </div>
 
-        {couponValid && (
-          <p className="text-green-600 mb-4">🎉 Coupon applied! You save $5.</p>
-        )}
+        {/* Card Input */}
+        <div className="border-2 border-indigo-200 rounded-2xl p-4 mb-5 bg-gray-50 focus-within:ring-4 focus-within:ring-indigo-300">
+          <CardElement
+            options={{
+              style: {
+                base: {
+                  fontSize: "17px",
+                  fontWeight: "600",
+                  color: "#1f2937",
+                },
+              },
+            }}
+          />
+        </div>
 
-        <CardElement className="p-2 border rounded-md mb-4" />
-
+        {/* Pay Button */}
         <button
           type="submit"
-          className="btn btn-primary w-full"
           disabled={processing}
+          className="btn btn-primary w-full text-lg font-extrabold flex items-center justify-center gap-2"
         >
-          {processing ? "Processing..." : `Pay $${(finalAmount / 100).toFixed(2)}`}
+          <FaLock />
+          {processing ? "Processing..." : "Confirm Payment"}
         </button>
 
-        {error && <p className="text-red-600 mt-2 text-sm">{error}</p>}
-      </form>
+        {/* Security */}
+        <div className="flex items-center justify-center gap-2 text-xs text-gray-500 mt-5">
+          <FaShieldAlt className="text-green-600" />
+          256-bit SSL Secure Payment
+        </div>
+
+        {error && (
+          <p className="text-red-500 mt-4 text-sm text-center font-semibold">
+            {error}
+          </p>
+        )}
+      </motion.form>
     </div>
   );
 };
