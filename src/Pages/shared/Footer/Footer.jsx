@@ -8,115 +8,125 @@ import {
   FaFacebook,
   FaGithub,
   FaLinkedin,
+  FaCcVisa,
+  FaCcMastercard,
+  FaCcPaypal,
+  FaStripe,
+  FaLock,
+  FaInfoCircle,
+  FaHeadset,
 } from "react-icons/fa";
+import { motion } from "framer-motion";
 import home12Logo from "../../../assets/logo-1.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 border-t mt-10 px-4 py-8 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 text-center sm:text-left">
-        {/* Logo */}
-        <div className="flex flex-col items-center sm:items-start">
-          <NavLink to="/" className="btn btn-ghost normal-case text-xl p-0">
+    <footer className="relative mt-8 bg-white/70 dark:bg-black/70 backdrop-blur-xl text-gray-900 dark:text-gray-100 border-t border-white/20 dark:border-gray-800 px-4 py-12">
+
+      {/* Gradient top line */}
+      <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500" />
+
+      {/* ================= MAIN GRID ================= */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        viewport={{ once: true }}
+        className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-10"
+      >
+        {/* Logo & About */}
+        <div className="md:col-span-2">
+          <NavLink to="/">
             <img
               src={home12Logo}
               alt="logo"
-              className="h-12 w-auto object-contain p-1 rounded"
+              className="h-12 mb-4 hover:scale-105 transition-transform"
             />
           </NavLink>
-          <p className="mt-2 text-sm">Your go-to app for awesome products.</p>
+          <p className="text-sm opacity-80 max-w-sm">
+            AppOrbit is your trusted platform for discovering, sharing, and
+            supporting innovative tech products worldwide.
+          </p>
         </div>
 
-        {/* Useful Links */}
+        {/* Links */}
         <div>
-          <h3 className="font-semibold mb-2">Useful Links</h3>
-          <ul className="space-y-2">
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <FaHome />
-              <Link
-                to="/"
-                className="hover:text-blue-400 dark:hover:text-blue-600 transition-colors"
-              >
-                Home
-              </Link>
-            </li>
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <FaThList />
-              <Link
-                to="/products"
-                className="hover:text-blue-400 dark:hover:text-blue-600 transition-colors"
-              >
-                Products
-              </Link>
-            </li>
-            <li className="flex items-center justify-center sm:justify-start gap-2">
-              <FaSignInAlt />
-              <Link
-                to="/login"
-                className="hover:text-blue-400 dark:hover:text-blue-600 transition-colors"
-              >
-                Login
-              </Link>
-            </li>
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <FaHome /> Links
+          </h3>
+          <ul className="space-y-3 text-sm">
+            <li><Link to="/" className="hover:text-blue-500">Home</Link></li>
+            <li><Link to="/products" className="hover:text-blue-500">Products</Link></li>
+            <li><Link to="/login" className="hover:text-blue-500">Login</Link></li>
           </ul>
         </div>
 
-        {/* Contact & Social Info */}
+        {/* Support */}
         <div>
-          <h3 className="font-semibold mb-2">Contact</h3>
-          <p className="flex items-center justify-center sm:justify-start gap-2">
-            <FaEnvelope />
-            <a
-              href="mailto:sefat01625@gmail.com"
-              className="hover:text-blue-400 dark:hover:text-blue-600 transition-colors"
-            >
-              sefat01625@gmail.com
-            </a>
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <FaHeadset /> Support
+          </h3>
+          <ul className="space-y-3 text-sm">
+            <li><Link to="/faq" className="hover:text-blue-500">FAQ</Link></li>
+            <li><Link to="/contact" className="hover:text-blue-500">Contact Us</Link></li>
+            <li><Link to="/privacy" className="hover:text-blue-500">Privacy Policy</Link></li>
+          </ul>
+        </div>
+
+        {/* Contact & Social */}
+        <div>
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <FaInfoCircle /> Contact
+          </h3>
+
+          <p className="flex items-center gap-2 text-sm opacity-80">
+            <FaEnvelope /> sefat01625@gmail.com
           </p>
-          <p className="flex items-center justify-center sm:justify-start gap-2 mt-1">
-            <FaPhoneAlt />
-            <a
-              href="tel:+8801625192069"
-              className="hover:text-blue-400 dark:hover:text-blue-600 transition-colors"
-            >
-              +880 1625192069
-            </a>
+          <p className="flex items-center gap-2 text-sm opacity-80 mt-2">
+            <FaPhoneAlt /> +880 1625192069
           </p>
 
           {/* Social Icons */}
-          <div className="flex justify-center sm:justify-start mt-3 space-x-3 text-xl">
-            <a
-              href="https://www.facebook.com/abusolaymun.sefat/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-600 text-white hover:bg-blue-500 transition-colors"
-            >
-              <FaFacebook />
-            </a>
-            <a
-              href="https://github.com/Abusolaymansefat"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-gray-700 text-white hover:bg-gray-600 dark:bg-gray-300 dark:text-gray-900 dark:hover:bg-gray-400 transition-colors"
-            >
-              <FaGithub />
-            </a>
-            <a
-              href="https://www.linkedin.com/in/abu-solayman-sefat/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-blue-700 text-white hover:bg-blue-600 transition-colors"
-            >
-              <FaLinkedin />
-            </a>
+          <div className="flex gap-4 mt-4 text-xl">
+            <motion.a whileHover={{ y: -4 }} href="https://www.facebook.com/abusolaymun.sefat/" target="_blank">
+              <FaFacebook className="text-blue-600" />
+            </motion.a>
+            <motion.a whileHover={{ y: -4 }} href="https://github.com/Abusolaymansefat" target="_blank">
+              <FaGithub className="text-gray-800 dark:text-gray-200" />
+            </motion.a>
+            <motion.a whileHover={{ y: -4 }} href="https://www.linkedin.com/in/abu-solayman-sefat/" target="_blank">
+              <FaLinkedin className="text-blue-700" />
+            </motion.a>
           </div>
+        </div>
+      </motion.div>
+
+      {/* ================= PAYMENT SECTION ================= */}
+      <div className="max-w-7xl mx-auto mt-12 text-center">
+        <div className="flex justify-center items-center gap-2 text-sm mb-5 opacity-80">
+          <FaLock className="text-green-500" />
+          <span>Secure & Trusted Payments</span>
+        </div>
+
+        <div className="flex justify-center gap-8 text-5xl">
+          <motion.div whileHover={{ scale: 1.2 }}>
+            <FaCcVisa className="text-[#1A1F71]" />
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.2 }}>
+            <FaCcMastercard className="text-[#EB001B]" />
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.2 }}>
+            <FaCcPaypal className="text-[#003087]" />
+          </motion.div>
+          <motion.div whileHover={{ scale: 1.2 }}>
+            <FaStripe className="text-[#635BFF]" />
+          </motion.div>
         </div>
       </div>
 
-      {/* Copyright at last */}
-      <div className="max-w-7xl mx-auto mt-6 text-center text-sm">
-        <p>© {new Date().getFullYear()} AppOrbit.</p>
-        <p>All rights reserved.</p>
+      {/* ================= BOTTOM ================= */}
+      <div className="max-w-7xl mx-auto mt-10 pt-6 border-t border-white/20 dark:border-gray-800 text-center text-sm opacity-80">
+        © {new Date().getFullYear()} AppOrbit. All rights reserved.
       </div>
     </footer>
   );

@@ -38,7 +38,7 @@ const Register = () => {
         isSubscribed: false,
       };
 
-      const response = await fetch("https://app-orbit-server-eight.vercel.app/users", {
+      const response = await fetch("http://localhost:3000/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -98,9 +98,8 @@ const Register = () => {
 
         <button
           type="submit"
-          className={`bg-green-500 text-white py-2 px-4 rounded w-full ${
-            loading ? "opacity-50 cursor-not-allowed" : ""
-          }`}
+          className={`bg-green-500 text-white py-2 px-4 rounded w-full ${loading ? "opacity-50 cursor-not-allowed" : ""
+            }`}
           disabled={loading}
         >
           {loading ? "Registering..." : "Register"}

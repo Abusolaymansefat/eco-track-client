@@ -10,11 +10,11 @@ const SocialLogin = () => {
 
   const handleGoogleLogin = async () => {
     try {
-      
+
       const result = await googleLogin();
       const user = result.user;
 
-      
+
       const token = await user.getIdToken();
       localStorage.setItem("accessToken", token);
 
@@ -27,7 +27,7 @@ const SocialLogin = () => {
         isSubscribed: false,
       };
 
-      const res = await fetch("https://app-orbit-server-eight.vercel.app/users", {
+      const res = await fetch("http://localhost:3000/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

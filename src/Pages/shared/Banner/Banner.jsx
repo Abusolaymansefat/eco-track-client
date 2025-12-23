@@ -1,116 +1,180 @@
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
-// eslint-disable-next-line no-unused-vars
 import { motion } from "framer-motion";
 import bannerimg1 from "../../../assets/banner/photo-1.avif";
 import bannerimg2 from "../../../assets/banner/photo-2.avif";
 import bannerimg3 from "../../../assets/banner/photo-3.avif";
 
+const overlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const textVariants = {
+  hidden: { opacity: 0, y: 50 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.8, ease: "easeOut" },
+  },
+};
+
 const Banner = () => {
   return (
-    <div className="max-w-full mx-auto mt-5">
+    <div className="max-w-7xl mx-auto mt-5 overflow-hidden">
       <Carousel
         showThumbs={false}
         autoPlay
         infiniteLoop
-        interval={4000}
+        interval={4500}
         showStatus={false}
-        transitionTime={600}
+        transitionTime={900}
         swipeable
         emulateTouch
       >
-        {/* Slide 1 */}
+        {/* ---------- Slide 1 ---------- */}
         <div className="relative">
-          <img
+          <motion.img
             src={bannerimg1}
             alt="Slide 1"
-            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
+            className="object-cover w-full h-[420px] sm:h-[520px] md:h-[650px]"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6, ease: "easeOut" }}
           />
-          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
+
+          {/* Glass Overlay */}
+          <motion.div
+            variants={overlayVariants}
+            initial="hidden"
+            animate="visible"
+            className="
+              absolute inset-0
+              bg-gradient-to-r
+              from-black/70 via-black/40 to-black/70
+              dark:from-white/40 dark:via-white/20 dark:to-white/40
+              backdrop-blur-[2px]
+              flex flex-col justify-center items-center
+              text-white dark:text-gray-900
+              p-6 text-center
+            "
+          >
             <motion.h2
-              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{
-                opacity: 1,
-                y: 0,
-                color: ["#f87171", "#60a5fa", "#34d399", "#fbbf24", "#f87171"],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
-              }}
+              variants={textVariants}
+              className="
+                text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4
+                bg-gradient-to-r from-pink-400 via-blue-400 to-green-400
+                bg-clip-text text-transparent
+                drop-shadow-lg
+              "
             >
               Discover the Future
             </motion.h2>
-            <p className="text-sm text-white sm:text-lg md:text-xl max-w-xl">
+
+            <motion.p
+              variants={textVariants}
+              className="text-sm sm:text-lg md:text-xl max-w-2xl opacity-90"
+            >
               Explore and upvote the latest web apps, AI tools, and digital
               products.
-            </p>
-          </div>
+            </motion.p>
+          </motion.div>
         </div>
 
-        {/* Slide 2 */}
+        {/* ---------- Slide 2 ---------- */}
         <div className="relative">
-          <img
+          <motion.img
             src={bannerimg2}
             alt="Slide 2"
-            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
+            className="object-cover w-full h-[420px] sm:h-[520px] md:h-[650px]"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6, ease: "easeOut" }}
           />
-          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
+
+          <motion.div
+            className="
+              absolute inset-0
+              bg-gradient-to-r
+              from-indigo-900/70 via-indigo-700/40 to-indigo-900/70
+              dark:from-white/40 dark:via-white/20 dark:to-white/40
+              backdrop-blur-[2px]
+              flex flex-col justify-center items-center
+              text-white dark:text-gray-900
+              p-6 text-center
+            "
+          >
             <motion.h2
-              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{
                 opacity: 1,
-                y: 0,
-                color: ["#3515c8", "#60a5fa", "#264b51", "#fbbf24", "#18117a"],
+                scale: 1,
+                textShadow: [
+                  "0px 0px 0px #fff",
+                  "0px 0px 20px #60a5fa",
+                  "0px 0px 0px #fff",
+                ],
               }}
               transition={{
-                duration: 4,
+                duration: 2.5,
                 repeat: Infinity,
                 repeatType: "loop",
-                ease: "easeInOut",
               }}
+              className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4"
             >
               Build & Share
             </motion.h2>
-            <p className="text-sm text-white sm:text-lg md:text-xl max-w-xl">
+
+            <p className="text-sm sm:text-lg md:text-xl max-w-2xl opacity-90">
               Submit your own tech product and get discovered by the world.
             </p>
-          </div>
+          </motion.div>
         </div>
 
-        {/* Slide 3 */}
+        {/* ---------- Slide 3 ---------- */}
         <div className="relative">
-          <img
+          <motion.img
             src={bannerimg3}
             alt="Slide 3"
-            className="object-cover w-full h-[400px] sm:h-[500px] md:h-[600px]"
+            className="object-cover w-full h-[420px] sm:h-[520px] md:h-[650px]"
+            initial={{ scale: 1.15 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 6, ease: "easeOut" }}
           />
-          <div className="absolute inset-0 bg-black/50 dark:bg-white/20 flex flex-col justify-center items-center text-white dark:text-gray-900 p-5 text-center">
+
+          <motion.div
+            className="
+              absolute inset-0
+              bg-gradient-to-r
+              from-emerald-900/70 via-emerald-700/40 to-emerald-900/70
+              dark:from-white/40 dark:via-white/20 dark:to-white/40
+              backdrop-blur-[2px]
+              flex flex-col justify-center items-center
+              text-white dark:text-gray-900
+              p-6 text-center
+            "
+          >
             <motion.h2
-              className="text-2xl sm:text-3xl md:text-5xl font-bold mb-3"
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 40 }}
               animate={{
                 opacity: 1,
                 y: 0,
-                color: ["#f87171", "#9dbaab", "#1d90ca", "#0ac3e0", "#0e4342"],
+                letterSpacing: ["0px", "3px", "0px"],
               }}
               transition={{
-                duration: 4,
+                duration: 3,
                 repeat: Infinity,
-                repeatType: "loop",
-                ease: "easeInOut",
+                repeatType: "mirror",
               }}
+              className="text-3xl sm:text-4xl md:text-6xl font-extrabold mb-4"
             >
               Join the Tech Community
             </motion.h2>
-            <p className="text-sm text-black sm:text-lg md:text-xl max-w-xl">
+
+            <p className="text-sm sm:text-lg md:text-xl max-w-2xl opacity-90">
               Vote, review, and connect with fellow developers and creators.
             </p>
-          </div>
+          </motion.div>
         </div>
       </Carousel>
     </div>
