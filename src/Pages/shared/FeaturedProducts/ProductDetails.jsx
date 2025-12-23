@@ -4,8 +4,8 @@ import { toast } from "react-toastify";
 import { FaThumbsUp, FaFlag } from "react-icons/fa";
 import { useForm } from "react-hook-form";
 import useAxios from "../../../hooks/useAxios";
-import useAuth from "../../../hooks/UseAuth";
 import { CircleLoader } from "react-spinners";
+import useAuth from "../../../hooks/useAuth";
 
 const ProductDetails = () => {
   const { id } = useParams();

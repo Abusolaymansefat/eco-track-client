@@ -1,19 +1,12 @@
-// import { Link, useNavigate } from "react-router";
-// import useAuth from "../../../hooks/UseAuth";
-// import useAxios from "../../../hooks/useAxios";
-// import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-// import { useEffect, useState } from "react";
-// import { toast } from "react-toastify";
-// import { FaThumbsUp } from "react-icons/fa";
-
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router";
 import useAuth from "../../../hooks/useAuth";
 import useAxios from "../../../hooks/useAxios";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { FaThumbsUp } from "react-icons/fa";
+import { FaThumbsUp, FaSearch } from "react-icons/fa";
 import Loading from "../../DashboardLayout/DashboardHome/Loading";
+import { motion } from "framer-motion";
 
 const AllProducts = () => {
   const axiosSecure = useAxios();
@@ -37,165 +30,198 @@ const AllProducts = () => {
   } = useQuery({
     queryKey: ["allProducts", page, searchTerm],
     queryFn: async () => {
-      try {
-        const res = await axiosSecure.get(
-          `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(
-            searchTerm
-          )}`
-        );
-        return res.data;
-      } catch (err) {
-        console.error("❌ Product fetch failed:", err);
-        throw err;
-      }
+      const res = await axiosSecure.get(
+        `/products?page=${page}&limit=${limit}&search=${encodeURIComponent(
+          searchTerm
+        )}`
+      );
+      return res.data;
     },
     keepPreviousData: true,
   });
 
-  // Safety check for products array and total count
   const products = Array.isArray(data?.products) ? data.products : [];
   const totalPages = Math.max(1, Math.ceil((data?.total || 0) / limit));
 
   const upvoteMutation = useMutation({
-    mutationFn: async (id) => {
-      return await axiosSecure.patch(`/products/upvote/${id}`, {
+    mutationFn: async (id) =>
+      axiosSecure.patch(`/products/upvote/${id}`, {
         userEmail: user.email,
-      });
-    },
+      }),
     onSuccess: () => {
       toast.success("Upvoted!");
       queryClient.invalidateQueries(["allProducts", page, searchTerm]);
     },
-    onError: () => {
-      toast.error("You already voted or something went wrong.");
-    },
+    onError: () => toast.error("You already voted."),
   });
 
   const handleUpvote = (product) => {
-    if (!user) {
-      toast.error("Please login to upvote.");
-      return navigate("/login");
-    }
-    if (product.voters?.includes(user.email)) {
-      toast.error("You already voted!");
-      return;
-    }
+    if (!user) return navigate("/login");
+    if (product.voters?.includes(user.email))
+      return toast.error("Already voted!");
     upvoteMutation.mutate(product._id);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-10">
-      <h2 className="text-3xl sm:text-4xl font-bold text-center mb-6 text-[#1fc2eb]">
-        🛍️ All Products
-      </h2>
+    <section className="relative py-20">
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
+      <div className="relative max-w-7xl mx-auto px-4">
+        {/* Title */}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="
+            text-4xl font-extrabold text-center mb-10
+            bg-gradient-to-r from-sky-500 via-indigo-500 to-purple-600
+            bg-clip-text text-transparent
+          "
+        >
+          🛍️ All Products
+        </motion.h2>
 
-      {/* Search Input */}
-      <div className="max-w-md mx-auto mb-8">
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="input input-bordered w-full"
-        />
-      </div>
-
-      {/* Loading/Error/No products */}
-      {isLoading && (
-        <p className="text-center text-blue-500">
-          <Loading />
-        </p>
-      )}
-      {isError && (
-        <p className="text-center text-red-500">
-          Failed to load products: {error.message}
-        </p>
-      )}
-      {!isLoading && !isError && products.length === 0 && (
-        <p className="text-center text-red-500">No products found.</p>
-      )}
-
-      {/* Products Grid */}
-      {!isLoading && !isError && products.length > 0 && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6">
-          {products.map((product) => {
-            const alreadyVoted = product.voters?.includes(user?.email);
-            const isOwner = user?.email === product.ownerEmail;
-            const tagsArray = Array.isArray(product.tags)
-              ? product.tags
-              : product.tags?.split(",") || [];
-
-            return (
-              <div
-                key={product._id}
-                className="p-4 rounded-lg shadow-md hover:shadow-lg transition bg-white "
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-40 sm:h-48 md:h-52 object-cover rounded"
-                />
-                <Link to={`/products/${product._id}`}>
-                  <h3 className="text-lg sm:text-xl font-semibold text-[#4876a3] dark:text-[#0d5eaf] hover:underline mt-2">
-                    {product.name}
-                  </h3>
-                </Link>
-
-                <div className="flex flex-wrap gap-2 my-2">
-                  {tagsArray.map((tag, idx) => (
-                    <span
-                      key={idx}
-                      className="px-2 py-1 text-xs rounded-full bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                    >
-                      {tag.trim()}
-                    </span>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => handleUpvote(product)}
-                  disabled={isOwner || alreadyVoted}
-                  className={`btn btn-sm mt-3 flex items-center gap-2 ${
-                    isOwner || alreadyVoted ? "btn-disabled" : "btn-primary"
-                  }`}
-                >
-                  <FaThumbsUp size={12} /> {product.upvotes}
-                </button>
-
-                {(isOwner || alreadyVoted) && (
-                  <p className="text-xs text-red-500 mt-1">
-                    {isOwner
-                      ? "You can't vote on your own product"
-                      : "You already voted"}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+        {/* Search */}
+        <div className="max-w-md mx-auto mb-12 relative">
+          <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="
+              w-full pl-12 pr-4 py-3 rounded-full
+              border bg-white
+              focus:ring-2 focus:ring-indigo-400
+            "
+          />
         </div>
-      )}
 
-      {/* Pagination Controls */}
-      <div className="flex flex-col sm:flex-row justify-center items-center mt-10 gap-4">
-        <button
-          onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-          disabled={page === 1}
-          className="btn btn-sm btn-outline"
-        >
-          Prev
-        </button>
-        <span className="mt-1 font-medium">
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-          disabled={page >= totalPages}
-          className="btn btn-sm btn-outline"
-        >
-          Next
-        </button>
+        {/* States */}
+        {isLoading && (
+          <div className="text-center py-10">
+            <Loading />
+          </div>
+        )}
+        {isError && (
+          <p className="text-center text-red-500">
+            {error.message || "Failed to load products"}
+          </p>
+        )}
+
+        {/* Products */}
+        {!isLoading && !isError && products.length > 0 && (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">
+            {products.map((product, i) => {
+              const alreadyVoted = product.voters?.includes(user?.email);
+              const isOwner = user?.email === product.ownerEmail;
+              const tagsArray = Array.isArray(product.tags)
+                ? product.tags
+                : product.tags?.split(",") || [];
+
+              return (
+                <motion.div
+                  key={product._id}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
+                  viewport={{ once: true }}
+                  whileHover={{ y: -10 }}
+                  className="
+                    rounded-3xl p-5
+                    bg-white/70 backdrop-blur-xl
+                    border border-white/30
+                    shadow-[0_0_40px_rgba(0,0,0,0.12)]
+                  "
+                >
+                  {/* Image */}
+                  <div className="overflow-hidden rounded-2xl mb-4">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-44 w-full object-cover transition-transform duration-500 hover:scale-110"
+                    />
+                  </div>
+
+                  {/* Title */}
+                  <Link
+                    to={`/products/${product._id}`}
+                    className="
+                      text-lg font-bold block mb-2
+                      bg-gradient-to-r from-blue-600 to-indigo-600
+                      bg-clip-text text-transparent
+                      hover:underline
+                    "
+                  >
+                    {product.name}
+                  </Link>
+
+                  {/* Tags */}
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {tagsArray.map((tag, idx) => (
+                      <span
+                        key={idx}
+                        className="text-xs px-3 py-1 rounded-full bg-blue-100 text-blue-800"
+                      >
+                        {tag.trim()}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Upvote */}
+                  <button
+                    onClick={() => handleUpvote(product)}
+                    disabled={isOwner || alreadyVoted}
+                    className="
+                      w-full flex items-center justify-center gap-2
+                      py-2 rounded-full font-semibold
+                      bg-gradient-to-r from-indigo-600 to-purple-600
+                      text-white
+                      hover:from-purple-600 hover:to-pink-600
+                      disabled:opacity-50 disabled:cursor-not-allowed
+                      transition
+                    "
+                  >
+                    <FaThumbsUp /> {product.upvotes}
+                  </button>
+
+                  {(isOwner || alreadyVoted) && (
+                    <p className="text-[11px] text-red-500 text-center mt-2">
+                      {isOwner
+                        ? "You can't vote on your own product"
+                        : "You already voted"}
+                    </p>
+                  )}
+                </motion.div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Pagination */}
+        <div className="flex justify-center items-center mt-16 gap-6">
+          <button
+            onClick={() => setPage((p) => Math.max(p - 1, 1))}
+            disabled={page === 1}
+            className="px-6 py-2 rounded-full bg-gray-200 disabled:opacity-50"
+          >
+            Prev
+          </button>
+
+          <span className="font-semibold">
+            Page {page} / {totalPages}
+          </span>
+
+          <button
+            onClick={() => setPage((p) => Math.min(p + 1, totalPages))}
+            disabled={page >= totalPages}
+            className="px-6 py-2 rounded-full bg-gray-200 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
+    </section>
   );
 };
 
