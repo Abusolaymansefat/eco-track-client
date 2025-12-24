@@ -23,6 +23,7 @@ import {
   FaMoneyBillWave,
   FaFlag,
 } from "react-icons/fa";
+import CouponUsageLiveChart from "../../shared/ManageCoupons/CouponUsageLiveChart";
 
 /* ---------- Colors ---------- */
 const COLORS = ["#22c55e", "#facc15", "#60a5fa", "#a855f7", "#f87171"];
@@ -216,6 +217,10 @@ const AdminDashboard = () => {
               <Tooltip />
             </PieChart>
           </ResponsiveContainer>
+        </div>
+
+        <div className="mt-16">
+          <CouponUsageLiveChart />
         </div>
       </div>
     </div>
