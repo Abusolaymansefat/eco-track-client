@@ -56,7 +56,7 @@ const Register = () => {
       await createUser(data.email, data.password);
       await updateProfile(data.name, imageURL);
 
-      await fetch("http://localhost:3000/users", {
+      await fetch("https://eco-track-server-iota.vercel.app/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -145,8 +145,8 @@ const Register = () => {
                       passwordStrength() < 50
                         ? "#ef4444"
                         : passwordStrength() < 75
-                        ? "#f59e0b"
-                        : "#22c55e",
+                          ? "#f59e0b"
+                          : "#22c55e",
                   }}
                 />
               </div>

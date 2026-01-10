@@ -37,7 +37,7 @@ const SocialLogin = () => {
         isSubscribed: false,
       };
 
-      const res = await fetch("http://localhost:3000/users", {
+      const res = await fetch("https://eco-track-server-iota.vercel.app/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

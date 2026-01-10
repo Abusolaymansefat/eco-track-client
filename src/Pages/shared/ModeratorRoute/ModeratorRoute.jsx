@@ -1,5 +1,6 @@
 import { Navigate, useLocation } from "react-router";
-import useAuth from "../../../hooks/UseAuth";
+import useAuth from "../../../hooks/useAuth";
+import Loading from "../../DashboardLayout/DashboardHome/Loading";
 
 const ModeratorRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -7,7 +8,7 @@ const ModeratorRoute = ({ children }) => {
   const isModerator = user?.role === "moderator";
   const location = useLocation();
 
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <div> <Loading/> </div>
 
   if (user && isModerator) return children;
 
