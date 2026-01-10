@@ -5,6 +5,7 @@ import Loading from "../DashboardHome/Loading";
 import AdminDashboard from "../DashboardHome/AdminDashboard";
 import UserDashboard from "../DashboardHome/UserDashboard";
 import Forbidden from "../../shared/Forbidden/Forbidden";
+import MembershipDashboards from "../DashboardHome/MembershipDashboards";
 
 const DashboardHome = () => {
   const [role, roleLoading] = useAdmin();
@@ -27,6 +28,9 @@ const DashboardHome = () => {
 
   if (role === "user") {
     return <UserDashboard />;
+  }
+  if (role === "membership") {
+    return <MembershipDashboards />;
   }
 
   

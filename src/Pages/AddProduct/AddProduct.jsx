@@ -4,9 +4,23 @@ import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { imageUpload } from "../../api/utils";
 import { PulseLoader } from "react-spinners";
-import useAuth from "../../hooks/UseAuth";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { FaImage, FaTag, FaLink, FaInfoCircle } from "react-icons/fa";
+import useAuth from "../../hooks/useAuth";
+
+/* ---------------- Animation Variants ---------------- */
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
+};
 
 const AddProduct = () => {
   const axiosSecure = useAxios();
@@ -59,7 +73,7 @@ const AddProduct = () => {
   const tagsValue = watch("tags");
   useEffect(() => {
     if (tagsValue) {
-      setTagsPreview(tagsValue.split(",").map((t) => t.trim()));
+      setTagsPreview(tagsValue.split(",").map((t) => t.trim()).filter(Boolean));
     }
   }, [tagsValue]);
 
@@ -96,6 +110,7 @@ const AddProduct = () => {
         toast.success("🚀 Product added successfully!");
         reset();
         setImageURL("");
+        setTagsPreview([]);
         setUserProductCount((c) => c + 1);
       }
     } catch {
@@ -108,117 +123,128 @@ const AddProduct = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-sky-100 via-white to-purple-100 p-4">
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="
-          w-full max-w-2xl
-          bg-white/70 backdrop-blur-xl
-          border border-white/30
-          rounded-3xl p-8
-          shadow-[0_0_60px_rgba(0,0,0,0.2)]
-        "
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-2xl bg-white/70 backdrop-blur-xl border rounded-3xl p-8 shadow-2xl"
       >
         <h2 className="text-3xl font-extrabold text-center mb-2 bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text text-transparent">
           ➕ Add New Product
         </h2>
 
-        <p className="text-center text-sm opacity-70 mb-6">
-          Share your product with the community
-        </p>
-
         {/* Limit Info */}
-        <div className="mb-4 text-xs flex items-center justify-center gap-2 text-gray-600">
-          <FaInfoCircle />
-          {isSubscribed
-            ? "Pro user: Unlimited products"
-            : `Free user: ${userProductCount}/1 product used`}
-        </div>
+        <AnimatePresence>
+          {!isSubscribed && userProductCount >= 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              className="text-center text-sm mb-4 text-red-600 font-medium"
+            >
+              ⚠️ Free limit reached — Upgrade to add more products
+            </motion.div>
+          )}
+        </AnimatePresence>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <input
+        <motion.form
+          variants={container}
+          initial="hidden"
+          animate="show"
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4"
+        >
+          <motion.input
+            variants={item}
             {...register("name", { required: true })}
             placeholder="Product Name"
             className="input input-bordered w-full"
           />
 
-          {/* Image Upload */}
-          <label className="flex items-center gap-2 text-sm font-medium">
-            <FaImage /> Product Image
-          </label>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            className="file-input file-input-bordered w-full"
-            disabled={uploading || submitting}
-          />
-
-          {uploading && (
-            <p className="text-sm text-blue-500">Uploading image...</p>
-          )}
+          <motion.div variants={item}>
+            <label className="flex items-center gap-2 text-sm font-medium mb-1">
+              <FaImage /> Product Image
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="file-input file-input-bordered w-full"
+              disabled={uploading || submitting}
+            />
+          </motion.div>
 
           {imageURL && (
             <motion.img
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
+              animate={{ y: [0, -6, 0] }}
+              transition={{ repeat: Infinity, duration: 3 }}
+              whileHover={{ scale: 1.05 }}
               src={imageURL}
-              alt="Preview"
-              className="w-40 rounded-lg shadow"
+              className="w-40 rounded-xl shadow-lg border"
             />
           )}
 
-          <textarea
+          <motion.textarea
+            variants={item}
             {...register("description", { required: true })}
             placeholder="Product Description"
             className="textarea textarea-bordered w-full"
           />
 
-          <div className="relative">
+          <motion.div variants={item} className="relative">
             <FaLink className="absolute left-3 top-3 text-gray-400" />
             <input
               {...register("externalLink")}
-              placeholder="External Link (optional)"
+              placeholder="External Link"
               className="input input-bordered w-full pl-9"
             />
-          </div>
+          </motion.div>
 
-          <div className="relative">
+          <motion.div variants={item} className="relative">
             <FaTag className="absolute left-3 top-3 text-gray-400" />
             <input
               {...register("tags")}
               placeholder="Tags (comma separated)"
               className="input input-bordered w-full pl-9"
             />
-          </div>
+          </motion.div>
 
           {/* Tags Preview */}
           <div className="flex flex-wrap gap-2">
-            {tagsPreview.map((tag, i) => (
-              <span
-                key={i}
-                className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700"
-              >
-                #{tag}
-              </span>
-            ))}
+            <AnimatePresence>
+              {tagsPreview.map((tag, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={{ scale: 0 }}
+                  className="px-3 py-1 text-xs rounded-full bg-indigo-100 text-indigo-700"
+                >
+                  #{tag}
+                </motion.span>
+              ))}
+            </AnimatePresence>
           </div>
 
           <motion.button
-            whileHover={{ scale: 1.03 }}
-            whileTap={{ scale: 0.97 }}
+            whileHover={{
+              scale: 1.05,
+              backgroundPosition: "200% center",
+            }}
+            whileTap={{ scale: 0.95 }}
             type="submit"
             disabled={uploading || submitting}
             className="
               w-full py-3 rounded-full font-bold text-white
-              bg-gradient-to-r from-indigo-600 to-purple-600
+              bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600
+              bg-[length:200%_200%]
+              transition-all duration-500
               flex items-center justify-center gap-2
             "
           >
             {submitting && <PulseLoader size={8} color="#fff" />}
             {submitting ? "Submitting..." : "Add Product"}
           </motion.button>
-        </form>
+        </motion.form>
       </motion.div>
     </div>
   );

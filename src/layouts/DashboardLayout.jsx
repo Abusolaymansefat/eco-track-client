@@ -15,6 +15,7 @@ import {
   FaBars,
   FaTimes,
   FaSignOutAlt,
+  FaBell,
 } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { toast } from "react-toastify";
@@ -52,7 +53,7 @@ const DashboardLayout = () => {
   const handleLogout = async () => {
     try {
       await logout();
-      toast.success("👋 Logged out successfully");
+      toast.success("Logged out");
       navigate("/");
     } catch {
       toast.error("Logout failed");
@@ -60,19 +61,18 @@ const DashboardLayout = () => {
   };
 
   const linkClass = ({ isActive }) =>
-    `flex items-center gap-3 px-4 py-2 rounded-lg transition
-     ${
-       isActive
-         ? "bg-indigo-600 text-white"
-         : "text-gray-300 hover:bg-white/10"
-     }`;
+    `relative flex items-center gap-3 px-4 py-2 rounded-lg transition-all
+     ${isActive
+      ? "bg-white text-black font-semibold"
+      : "text-gray-400 hover:bg-white/10 hover:text-white"
+    }`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-100 via-slate-200 to-slate-300">
+    <div className="min-h-screen bg-gray-100">
       {/* Mobile Toggle */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 text-2xl text-gray-800"
+        className="lg:hidden fixed top-4 left-4 z-50 text-2xl text-black"
       >
         {sidebarOpen ? <FaTimes /> : <FaBars />}
       </button>
@@ -85,15 +85,13 @@ const DashboardLayout = () => {
         className="
           fixed top-0 left-0 z-40
           w-64 h-screen
-          bg-gray-900/95 backdrop-blur-xl
-          text-white p-5
-          shadow-[0_0_40px_rgba(0,0,0,0.6)]
-          flex flex-col
+          bg-black text-white
+          p-5 flex flex-col
         "
       >
         {/* Logo */}
-        <Link to="/" className="mb-6">
-          <img src={home12Logo} alt="logo" className="w-28 mx-auto" />
+        <Link to="/" className="mb-6 flex justify-center">
+          <img src={home12Logo} alt="logo" className="w-24 invert" />
         </Link>
 
         {/* User Card */}
@@ -101,15 +99,22 @@ const DashboardLayout = () => {
           <img
             src={user?.photoURL || "https://i.pravatar.cc/100"}
             alt="user"
-            className="w-12 h-12 rounded-full border-2 border-indigo-400"
+            className="w-12 h-12 rounded-full border border-white"
           />
-          <div>
-            <p className="font-semibold text-sm">
+          <div className="flex-1">
+            <p className="text-sm font-semibold">
               {user?.displayName || "User"}
             </p>
             <p className="text-xs opacity-70">
               {isAdmin ? "Admin" : userData?.role || "Member"}
             </p>
+          </div>
+
+          <div className="relative">
+            <FaBell />
+            <span className="absolute -top-1 -right-1 bg-white text-black text-xs w-4 h-4 rounded-full flex items-center justify-center">
+              3
+            </span>
           </div>
         </div>
 
@@ -148,9 +153,9 @@ const DashboardLayout = () => {
 
           {isAdmin && (
             <>
-              <NavLink to="/dashboardLayout/statistics" className={linkClass}>
+              {/* <NavLink to="/dashboardLayout/statistics" className={linkClass}>
                 <FaChartBar /> Statistics
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/dashboardLayout/reported-Products"
@@ -182,8 +187,8 @@ const DashboardLayout = () => {
           className="
             mt-6 flex items-center justify-center gap-2
             py-2 rounded-lg
-            bg-red-500/80 hover:bg-red-600
-            transition font-semibold
+            bg-white text-black font-semibold
+            hover:bg-gray-200 transition
           "
         >
           <FaSignOutAlt /> Logout
@@ -191,7 +196,7 @@ const DashboardLayout = () => {
       </motion.aside>
 
       {/* Main Content */}
-      <main className="min-h-screen pl-0 lg:pl-64 p-6 transition-all">
+      <main className="min-h-screen pl-0 lg:pl-64 p-6 bg-white">
         <Outlet />
       </main>
     </div>
